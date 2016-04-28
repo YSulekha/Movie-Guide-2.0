@@ -11,32 +11,6 @@
     android:adjustViewBounds="true"
     android:src="@drawable/download"
   />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/movie_poster_image"
-        >
-
-    <TextView
-        android:id="@+id/movie_poster_rating"
-        android:layout_width = "wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dssdffdfd"
-        android:background="#0205ff5f"
-        android:layout_alignParentBottom="false"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal" />
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:src="@drawable/ic_grade_black_24dp"
-            android:id="@+id/star"
-            android:layout_alignParentBottom="false"
-            android:layout_toRightOf="@+id/movie_poster_rating"
-            android:layout_alignBottom="@+id/movie_poster_rating"
-            android:layout_alignTop="@+id/movie_poster_rating"/>
-
-    </RelativeLayout>
 
 
 
