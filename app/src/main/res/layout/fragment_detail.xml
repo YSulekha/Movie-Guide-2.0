@@ -1,0 +1,92 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nanodegree.alse.movieguide.DetailActivityFragment"
+    android:orientation="vertical"
+    android:padding="5dp"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/detail_ImageView"
+        android:src="@drawable/download"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="SuperMan VS Batman"
+        android:id="@+id/detail_moviename"
+
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textColor="#4f8a48" />
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_ratingBar"
+        android:layout_gravity="center_horizontal"
+        android:isIndicator="true"
+        android:stepSize=".11"
+        android:numStars="5"
+        android:rating="3.65"
+        android:mirrorForRtl="false" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Release Date: "
+            android:textSize="20dp"
+
+            android:typeface="monospace"
+            android:textColor="#143b8a" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/detail_release_date"
+            android:text="Hello"
+            android:layout_weight="1"
+            android:layout_marginRight="32dp"
+            android:textSize="20dp"
+            android:paddingLeft="5dp"
+            android:typeface="monospace" />
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overview: "
+        android:textSize="20dp"
+        android:textColor="#143b8a"
+        android:typeface="monospace"
+
+        android:textColorHighlight="#143b8a" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Large Text"
+        android:id="@+id/detail_overview"
+        android:textSize="20dp"
+        android:typeface="normal"
+        android:outlineProvider="background" />
+
+
+
+</LinearLayout>
+
