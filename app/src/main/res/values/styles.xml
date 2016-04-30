@@ -1,33 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-     <!-- <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-           <!- Customize your theme here. -->
-   <!--   </style>-->
-
-    <color name="my_color">#FF0A0704</color>
-    <color name="colorPrimary">#FF450E</color>
-    <color name="colorPrimaryDark">#FB6542</color>
-    <color name="colorAccent">#b0b0ff</color>
+        <item name="colorPrimary">@color/movie_grey</item>
+        <item name="colorPrimaryDark">@color/movie_dark_grey</item>
+        <item name="android:windowBackground">@color/movie_dark_grey</item>
 
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
 
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+           <!-- Customize your theme here. -->
+     </style>-->
 
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <!-- You can also set colorControlNormal, colorControlActivated
-             colorControlHighlight & colorSwitchThumbNormal. -->
+    <style name="DetailTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/movie_dark_grey</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/menu_text</item>
+        <item name="colorControlActivated">@color/star_colr</item>
+    </style>
+
+
 
 
 </resources>

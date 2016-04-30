@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="movie_grey">#212121</color>
+    <color name="movie_dark_grey">#000000</color>
+    <color name="menu_text">#FFFFFF</color>
+    <color name="star_colr">#FFD700</color>
+</resources>
+
+

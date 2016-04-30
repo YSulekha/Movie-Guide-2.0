@@ -26,7 +26,7 @@
 
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:textColor="#4f8a48" />
+        android:textColor="@color/menu_text" />
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,8 @@
         android:stepSize=".11"
         android:numStars="5"
         android:rating="3.65"
-        android:mirrorForRtl="false" />
+        android:mirrorForRtl="false"
+        android:theme="@style/RatingBar"/>
 
 
     <LinearLayout
@@ -62,7 +63,8 @@
             android:layout_marginRight="32dp"
             android:textSize="20dp"
             android:paddingLeft="5dp"
-            android:typeface="monospace" />
+            android:typeface="monospace"
+            android:textColor="@color/menu_text"/>
 
     </LinearLayout>
 
@@ -84,7 +86,10 @@
         android:id="@+id/detail_overview"
         android:textSize="20dp"
         android:typeface="normal"
-        android:outlineProvider="background" />
+        android:textIsSelectable="true"
+        android:textColor="@color/menu_text"
+        android:outlineProvider="background"
+        android:fontFamily="sans-serif-light"/>
 
 
 

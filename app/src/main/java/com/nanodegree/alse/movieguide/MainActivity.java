@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+     //   Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+      //  setSupportActionBar(myToolbar);
         Log.v("Inside OnCreateAcivity","Main");
 
 
@@ -47,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if(spinner !=null && spinner.getAdapter() ==null) {
             //Log.v("Inside Oncreate1", .toString());
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.pref_sort_entries,android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(R.layout.spinner_dropdown);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.pref_sort_entries,R.layout.spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
                     spinner.setAdapter(adapter);
