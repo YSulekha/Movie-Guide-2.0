@@ -71,7 +71,7 @@ public class DetailActivityFragment extends Fragment {
         rate.setRating((float) ((rating*5)/10));
 
         getActivity().setTitle(title);
-        getActivity().setTitleColor(R.color.my_color);
+    //    getActivity().setTitleColor(R.color.my_color);
         return root;
     }
 
