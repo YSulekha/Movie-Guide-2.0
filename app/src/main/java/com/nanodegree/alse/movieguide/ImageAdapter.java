@@ -1,13 +1,11 @@
 package com.nanodegree.alse.movieguide;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -52,12 +50,6 @@ public class ImageAdapter extends ArrayAdapter<String> {
 
         Picasso.with(mContext).load(imageURL).into(imageView);
 
-
-        TextView textView = (TextView)v.findViewById(R.id.movie_poster_rating);
-        if(textView!=null){
-            Log.v("Inside Addapter", textView.toString());
-            textView.setText(split[1]);
-        }
 
    //     textView.setText(split[1]);
         return v;

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
      //   Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
       //  setSupportActionBar(myToolbar);
-        Log.v("Inside OnCreateAcivity","Main");
+        Log.v("Inside OnCreateAcivity", "Main");
+        String title = getString(R.string.app_name);
+       // this.setTitleColor(Html.fromHtml("<strong>" + "<font color='#B71C1C'>" + "<big>"+ "</big" + "</font>" + "</strong>"));
+        setTitle(Html.fromHtml("<strong>" + "<font color='#B71C1C'>" + "<big>"+title+"</big" + "</font>" + "</strong>"));
 
 
     }

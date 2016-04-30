@@ -5,14 +5,15 @@
     android:layout_height="match_parent"
     tools:context="com.nanodegree.alse.movieguide.DetailActivityFragment"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:padding="10dp"
+    android:layout_margin="10dp"
     >
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="180dp"
         android:id="@+id/detail_ImageView"
         android:src="@drawable/download"
-        android:layout_weight="1"
+
         android:layout_gravity="center"
 
         />
@@ -20,10 +21,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="SuperMan VS Batman"
-        android:id="@+id/detail_moviename"
-
+        android:textSize="20dp"
+        android:typeface="normal"
+        android:id="@+id/detail_release_date"
+        android:text="Hello"
+        android:fontFamily="sans-serif-light"
+        android:paddingTop="10dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:textColor="@color/menu_text" />
@@ -39,57 +42,18 @@
         android:mirrorForRtl="false"
         android:theme="@style/RatingBar"/>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Release Date: "
-            android:textSize="20dp"
-
-            android:typeface="monospace"
-            android:textColor="#143b8a" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_release_date"
-            android:text="Hello"
-            android:layout_weight="1"
-            android:layout_marginRight="32dp"
-            android:textSize="20dp"
-            android:paddingLeft="5dp"
-            android:typeface="monospace"
-            android:textColor="@color/menu_text"/>
-
-    </LinearLayout>
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Overview: "
-        android:textSize="20dp"
-        android:textColor="#143b8a"
-        android:typeface="monospace"
-
-        android:textColorHighlight="#143b8a" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:text="Large Text"
         android:id="@+id/detail_overview"
         android:textSize="20dp"
-        android:typeface="normal"
+
         android:textIsSelectable="true"
         android:textColor="@color/menu_text"
         android:outlineProvider="background"
-        android:fontFamily="sans-serif-light"/>
+        android:fontFamily="sans-serif-condensed"/>
 
 
 
