@@ -6,11 +6,16 @@
         <item name="colorPrimary">@color/movie_grey</item>
         <item name="colorPrimaryDark">@color/movie_dark_grey</item>
         <item name="android:windowBackground">@color/movie_dark_grey</item>
+        <item name="android:textColor">@color/color_title</item>
 
 
 
            <!-- Customize your theme here. -->
      </style>-->
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 
     <style name="DetailTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/movie_dark_grey</item>
