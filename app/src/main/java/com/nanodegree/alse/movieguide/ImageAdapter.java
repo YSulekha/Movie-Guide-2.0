@@ -44,8 +44,8 @@ public class ImageAdapter extends ArrayAdapter<String> {
             v=convertView;
         }
         ImageView imageView = (ImageView)v.findViewById(R.id.movie_poster_image);
-        String [] split = getItem(position).split("-");
-        String imageURL = IMAGE_BASEURL + split[0];
+
+        String imageURL = IMAGE_BASEURL + getItem(position);
 
 
         Picasso.with(mContext).load(imageURL).into(imageView);

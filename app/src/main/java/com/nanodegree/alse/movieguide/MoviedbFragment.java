@@ -99,9 +99,9 @@ public class MoviedbFragment extends Fragment {
             imageUrls = new String[resultArray.length()];
             for(int i = 0; i < resultArray.length();i++){
                 String imageURL = resultArray.getJSONObject(i).getString(POSTER_PATH);
-                Double rating = resultArray.getJSONObject(i).getDouble("vote_average");
-                imageUrls[i] = imageURL+"-"+rating;
-                //Log.v("Inside formatJson",imageURL);
+
+                imageUrls[i] = imageURL;
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
