@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +24,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
      //   Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
       //  setSupportActionBar(myToolbar);
-        Log.v("Inside OnCreateAcivity","Main");
+        Log.v("Inside OnCreateAcivity", "Main");
+        String title = getString(R.string.app_name);
+       // this.setTitleColor(Html.fromHtml("<strong>" + "<font color='#B71C1C'>" + "<big>"+ "</big" + "</font>" + "</strong>"));
+        setTitle(Html.fromHtml ( "<font color='#B71C1C'>" +title+ "</font>"));
+        if (savedInstanceState != null) {
+            spinner.setSelection(savedInstanceState.getInt("sortOrder", 0));
+            // do this for each of your text views
+        }
 
 
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        
+
+        outState.putInt("sortOrder", spinner.getSelectedItemPosition());
+        // do this for each or your Spinner
+        // You might consider using Bundle.putStringArray() instead
+    }
+
+
+
 
     @Override
     protected void onResume() {

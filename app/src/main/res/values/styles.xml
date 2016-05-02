@@ -8,15 +8,28 @@
         <item name="android:windowBackground">@color/movie_dark_grey</item>
         <item name="android:textColor">@color/color_title</item>
 
+    </style>
+
+    <style name="ForecastTheme" parent="AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.Sunshine.NoTitle</item>
+    </style>
+
+    <!-- main activity action bar styles -->
+    <style name="ActionBar.Solid.Sunshine.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showTitle</item>
+        <item name="logo">@mipmap/ic_launcher</item>
+    </style>
+
+        <!-- main activity action bar styles -->
 
 
            <!-- Customize your theme here. -->
-     </style>-->
+
+   
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/color_title</item>
         <item name="android:textSize">12sp</item>
     </style>
-
     <style name="DetailTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/movie_dark_grey</item>
     </style>
@@ -24,6 +37,7 @@
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/menu_text</item>
         <item name="colorControlActivated">@color/star_colr</item>
+
     </style>
 
 

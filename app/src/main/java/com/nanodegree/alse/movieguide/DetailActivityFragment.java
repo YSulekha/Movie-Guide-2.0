@@ -3,6 +3,7 @@ package com.nanodegree.alse.movieguide;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +53,8 @@ public class DetailActivityFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        TextView textView = (TextView) root.findViewById(R.id.detail_moviename);
-        textView.setText(title);
+      //  TextView textView = (TextView) root.findViewById(R.id.detail_moviename);
+       // textView.setText(title);
         ImageView imageView = (ImageView) root.findViewById(R.id.detail_ImageView);
 
         Picasso.with(getActivity()).load(posterPath).
@@ -68,10 +69,16 @@ public class DetailActivityFragment extends Fragment {
 
 
         RatingBar rate = (RatingBar)root.findViewById(R.id.detail_ratingBar);
-        rate.setRating((float) ((rating*5)/10));
+        rate.setRating((float) ((rating * 5) / 10));
 
-        getActivity().setTitle(title);
-        getActivity().setTitleColor(R.color.color_title);
+
+
+
+      //  getActivity().setTitle(title);
+    //    getActivity().setTitleColor(R.color.my_color);
+        getActivity().setTitle(Html.fromHtml("<strong>"+"<font color='#B71C1C'>" +"<big>"+ title +"</big" +"</font>"+"</strong>"));
+      //  getSupportActionBar().setTitle(Html.fromHtml("<font color='#746E66'>" + titleText + "</font>"));
+
         return root;
     }
 
