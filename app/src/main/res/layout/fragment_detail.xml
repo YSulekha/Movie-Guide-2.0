@@ -6,26 +6,21 @@
     tools:context="com.nanodegree.alse.movieguide.DetailActivityFragment"
     android:orientation="vertical"
     android:padding="10dp"
-    android:layout_margin="10dp"
-    >
+    android:layout_margin="10dp">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/detail_ImageView"
-        android:src="@drawable/download"
-
-        android:layout_gravity="center"
-
-        />
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="16sp"
         android:typeface="normal"
         android:id="@+id/detail_release_date"
-        android:text="Hello"
-        android:fontFamily="sans-serif-condensed"
+        android:fontFamily="sans-serif"
         android:paddingTop="10dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
@@ -41,21 +36,16 @@
         android:rating="3.65"
         android:mirrorForRtl="false"
         android:theme="@style/RatingBar"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:text="Large Text"
         android:id="@+id/detail_overview"
-        android:textSize="20dp"
-
+        android:textSize="16sp"
         android:textIsSelectable="true"
         android:textColor="@color/menu_text"
         android:outlineProvider="background"
-        android:fontFamily="sans-serif-light"/>
-
-
-
+        android:fontFamily="sans-serif-medium"/>
 </LinearLayout>
 
