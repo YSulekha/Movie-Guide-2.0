@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -31,7 +32,8 @@ import java.net.URL;
 public class MoviedbFragment extends Fragment {
 
     ImageAdapter mImageAdapter;
-    JSONArray resultArray;
+    JSONArray [] resultArray = new JSONArray[2]; //Array to store the result of two pages retrieved from MovieDb API
+    final String LOGTAG = MoviedbFragment.class.getSimpleName();
 
     public MoviedbFragment() {
     }
@@ -39,7 +41,7 @@ public class MoviedbFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -49,16 +51,24 @@ public class MoviedbFragment extends Fragment {
         mImageAdapter = new ImageAdapter(getActivity(),R.layout.grid_view_movie);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
         gridView.setAdapter(mImageAdapter);
+
+        //On click open detail ACtivity layout
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(),DetailActivity.class);
-                String value =
-                        (String)parent.getItemAtPosition(position);
+                String value = (String)parent.getItemAtPosition(position);
+                int k = 0;
 
-                intent.putExtra(Intent.EXTRA_TEXT,resultArray.toString());
-                intent.putExtra("Position",position);
+                //Decide from which array the value should be retrieved
+                if(position >= resultArray[0].length() ) {
+                    position = position % resultArray[0].length();
+                    k++;
+                }
+                //Sending Jsonstr to detail view to retrive ralated string values
+                intent.putExtra(Intent.EXTRA_TEXT, resultArray[k].toString());
+                intent.putExtra(DetailActivityFragment.POSITION,position);
                 startActivity(intent);
 
             }
@@ -68,86 +78,94 @@ public class MoviedbFragment extends Fragment {
 
     public void onStart(){
         super.onStart();
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String selection = sharedPref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
-        Log.v("Inside OnStart",selection);
-        updateMovieList();
     }
-
-
-
+    //Function to call the background task
     public void updateMovieList(){
-     /*   SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String selection = shared.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
-        FetchMovieTask task = new FetchMovieTask();
-        task.execute(selection);*/
+
+        //Retrieve the preference value from Shared preference value
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selection = sharedPref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
         FetchMovieTask task = new FetchMovieTask();
         task.execute(selection);
     }
 
-    public String[] formatJSONStr(String jsonStr){
+    //Function to format JSON string retrived from API call
+    public ArrayList<String> formatJSONStr(String[] jsonStr){
+
         String RESULTS_ARRAY = "results";
         String POSTER_PATH = "poster_path";
-        String [] imageUrls = null;
 
+        ArrayList<String> imageUrls = new ArrayList<String>();
+        int j = 0;
+        int len = jsonStr.length;
         JSONObject jsonOutput = null;
+
         try {
-            jsonOutput = new JSONObject(jsonStr);
-            resultArray = jsonOutput.getJSONArray(RESULTS_ARRAY);
-            imageUrls = new String[resultArray.length()];
-            for(int i = 0; i < resultArray.length();i++){
-                String imageURL = resultArray.getJSONObject(i).getString(POSTER_PATH);
-
-                imageUrls[i] = imageURL;
-
+            //process the JSON str for two pages
+            while(j < len) {
+                jsonOutput = new JSONObject(jsonStr[j]);
+                resultArray[j] = jsonOutput.getJSONArray(RESULTS_ARRAY);
+                for (int i = 0; i < resultArray[j].length(); i++) {
+                    String imageURL = resultArray[j].getJSONObject(i).getString(POSTER_PATH);
+                    if(!imageURL.equals("null")) {
+                        imageUrls.add(imageURL);
+                    }
+                }
+               j++;
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOGTAG,"Error formating JSON string"+e.getMessage());
         }
 
         return imageUrls;
     }
 
-    public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+    //Class to execute the background task - fetching data from Moviedb API
+    public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<String>> {
 
         final String LOG_TAG = FetchMovieTask.class.getSimpleName();
         final String BASE_URI = "http://api.themoviedb.org/3/movie/";
         final String PARAM_APIKEY = "api_key";
+        final String PARAM_PAGE_NO = "page";
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected ArrayList<String> doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             String jsonStr = null;
             String path = params[0];
             String apiKey = BuildConfig.MOVIE_DB_API_KEY;
+            String [] appendedJson = new String[2];
             try {
-                Uri uri = Uri.parse(BASE_URI).buildUpon().appendPath(path).
-                        appendQueryParameter(PARAM_APIKEY, apiKey).build();
-                Log.v("Inside background",uri.toString());
-                URL url = new URL(uri.toString());
-                connection = (HttpURLConnection)url.openConnection();
-                connection.connect();
+                for(int i = 1;i < 3;i++) {
+                    Uri uri = Uri.parse(BASE_URI).buildUpon().appendPath(path).
+                            appendQueryParameter(PARAM_APIKEY, apiKey).
+                            appendQueryParameter(PARAM_PAGE_NO, String.valueOf(i)).build();
 
-                InputStream inputStream = connection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-                if(reader == null){
-                    return null;
-                }
-                StringBuffer buffer = new StringBuffer();
-                String line;
-                while((line = reader.readLine())!=null){
-                   buffer.append(line+"/n");
-                }
-                if(buffer.length()==0)
-                    return null;
-                jsonStr = buffer.toString();
-                Log.v(LOG_TAG,jsonStr);
+                    URL url = new URL(uri.toString());
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                    InputStream inputStream = connection.getInputStream();
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    if (reader == null) {
+                        return null;
+                    }
+
+                    StringBuffer buffer = new StringBuffer();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        buffer.append(line + "/n");
+                    }
+                    if (buffer.length() == 0)
+                        return null;
+                    jsonStr = buffer.toString();
+                    appendedJson[i-1] = jsonStr;
+                }
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error connecting to API" + e.getMessage());
             }
             finally {
                 if(connection != null)
@@ -156,20 +174,18 @@ public class MoviedbFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.d(LOGTAG, "Error closing reader" + e.getMessage());
                     }
             }
-            return formatJSONStr(jsonStr);
-
+            return formatJSONStr(appendedJson);
         }
 
         @Override
-        protected void onPostExecute(String jsonStr[]){
+        protected void onPostExecute(ArrayList<String> jsonStr){
             if(jsonStr != null){
                 mImageAdapter.clear();
-                Log.v("InsidePostExecute", "dsfsd");
-                for (String str : jsonStr){
-                    mImageAdapter.add(str);
+                for (int i = 0;i < jsonStr.size();i++){
+                    mImageAdapter.add(jsonStr.get(i));
                 }
             }
         }

@@ -5,6 +5,7 @@
     <color name="movie_dark_grey">#000000</color>
     <color name="menu_text">#FFFFFF</color>
     <color name="star_colr">#FFD700</color>
+    <color name="title_color">#B71C1C</color>
 </resources>
 
 

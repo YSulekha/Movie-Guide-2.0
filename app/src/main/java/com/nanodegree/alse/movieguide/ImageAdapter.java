@@ -9,14 +9,12 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by aharyadi on 4/11/16.
- */
+
 public class ImageAdapter extends ArrayAdapter<String> {
-    Context mContext;
-    LayoutInflater mInflater;
-    int mResource;
-    int mFieldId;
+
+    private Context mContext;
+    private LayoutInflater mInflater;
+    private int mResource;
     private final String IMAGE_BASEURL = "http://image.tmdb.org/t/p/w185/";
 
 
@@ -33,28 +31,19 @@ public class ImageAdapter extends ArrayAdapter<String> {
         super.add(object);
     }
 
-
     @Override
     public View getView(int position, View convertView ,ViewGroup parent){
-        View v;
+        View view;
+        String imageURL;
         if(convertView == null) {
-          v=  mInflater.inflate(mResource, parent, false);
+            view =  mInflater.inflate(mResource, parent, false);
         }
         else{
-            v=convertView;
+            view =convertView;
         }
-        ImageView imageView = (ImageView)v.findViewById(R.id.movie_poster_image);
-
-        String imageURL = IMAGE_BASEURL + getItem(position);
-
-
+        ImageView imageView = (ImageView)view.findViewById(R.id.movie_poster_image);
+        imageURL = IMAGE_BASEURL + getItem(position);
         Picasso.with(mContext).load(imageURL).into(imageView);
-
-
-   //     textView.setText(split[1]);
-        return v;
+        return view;
     }
-
-
-
 }
