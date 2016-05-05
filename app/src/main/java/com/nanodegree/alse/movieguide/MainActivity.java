@@ -41,15 +41,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int position = sharedPref.getInt("Position", 0);
         outState.putInt("position", position);
     }
-
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-        MoviedbFragment fragment = (MoviedbFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
-        fragment.updateMovieList();
-    }
-
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Store the position to access it in OnSaveInstance - handling Orientation change
         editor.putInt("Position",position);
         editor.commit();
+        Log.v("Inside OeateOptionsMenu", "Main");
 
         //Update the grid view when the user selects different option in spinner
         MoviedbFragment fragment = (MoviedbFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);

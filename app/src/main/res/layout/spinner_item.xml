@@ -4,6 +4,5 @@
     android:layout_height="match_parent"
     android:id="@+id/spinner_text"
     android:textSize="17sp"
-    android:textColor="#B71C1C">
-
+    android:textColor="@color/title_color">
 </TextView>

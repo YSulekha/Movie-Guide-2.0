@@ -51,6 +51,7 @@ public class MoviedbFragment extends Fragment {
         mImageAdapter = new ImageAdapter(getActivity(),R.layout.grid_view_movie);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
         gridView.setAdapter(mImageAdapter);
+        Log.v("Inside OnCreateAcivity", "Frag");
 
         //On click open detail ACtivity layout
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -66,6 +67,7 @@ public class MoviedbFragment extends Fragment {
                     position = position % resultArray[0].length();
                     k++;
                 }
+                Log.v("Inside Listener", resultArray[k].toString());
                 //Sending Jsonstr to detail view to retrive ralated string values
                 intent.putExtra(Intent.EXTRA_TEXT, resultArray[k].toString());
                 intent.putExtra(DetailActivityFragment.POSITION,position);
@@ -85,6 +87,7 @@ public class MoviedbFragment extends Fragment {
         //Retrieve the preference value from Shared preference value
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selection = sharedPref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
+        Log.v("InsideUpdate","dsfsd");
         FetchMovieTask task = new FetchMovieTask();
         task.execute(selection);
     }
@@ -107,9 +110,11 @@ public class MoviedbFragment extends Fragment {
                 resultArray[j] = jsonOutput.getJSONArray(RESULTS_ARRAY);
                 for (int i = 0; i < resultArray[j].length(); i++) {
                     String imageURL = resultArray[j].getJSONObject(i).getString(POSTER_PATH);
-                    if(!imageURL.equals("null")) {
-                        imageUrls.add(imageURL);
-                    }
+                    imageUrls.add(imageURL);
+                    if(imageURL.equals("null")) {
+                        String path = resultArray[j].getJSONObject(i).getString("backdrop_path");
+                        Log.v("path",path);
+                   }
                 }
                j++;
             }
@@ -127,6 +132,7 @@ public class MoviedbFragment extends Fragment {
         final String BASE_URI = "http://api.themoviedb.org/3/movie/";
         final String PARAM_APIKEY = "api_key";
         final String PARAM_PAGE_NO = "page";
+
 
         @Override
         protected ArrayList<String> doInBackground(String... params) {
