@@ -6,13 +6,9 @@
         <item name="colorPrimary">@color/movie_grey</item>
         <item name="colorPrimaryDark">@color/movie_dark_grey</item>
         <item name="android:windowBackground">@color/movie_dark_grey</item>
-        <item name="android:actionMenuTextColor">@color/title_color</item>
-        <item name="actionMenuTextColor">@color/title_color</item>
-
         <item name="actionBarStyle">@style/MyActionBar</item>
-
-        <!-- Customize your theme here. -->
     </style>
+
     <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
         <item name="titleTextStyle">@style/MyTitleTextStyle</item>
     </style>
@@ -21,11 +17,12 @@
         <item name="android:textColor">@color/title_color</item>
         <item name="android:textSize">20sp</item>\
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textStyle">bold</item>
     </style>
+
     <style name="DetailTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/movie_dark_grey</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
-
     </style>
 
 </resources>

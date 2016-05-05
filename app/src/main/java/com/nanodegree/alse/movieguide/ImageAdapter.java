@@ -1,6 +1,7 @@
 package com.nanodegree.alse.movieguide;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,8 @@ public class ImageAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView ,ViewGroup parent){
         View view;
-        String imageURL;
+        String imageURL = null;
+        String noPosterUrl = "https://assets.tmdb.org/assets/f996aa2014d2ffddfda8463c479898a3/images/no-poster-w185.jpg";
         if(convertView == null) {
             view =  mInflater.inflate(mResource, parent, false);
         }
@@ -42,8 +44,16 @@ public class ImageAdapter extends ArrayAdapter<String> {
             view =convertView;
         }
         ImageView imageView = (ImageView)view.findViewById(R.id.movie_poster_image);
-        imageURL = IMAGE_BASEURL + getItem(position);
-        Picasso.with(mContext).load(imageURL).into(imageView);
+        String url = getItem(position);
+
+        if (!url.equals("null")){
+            imageURL = IMAGE_BASEURL + url;
+            Picasso.with(mContext).load(imageURL).into(imageView);
+        }
+        else {
+            Log.v("ImageAdapter", url);
+            Picasso.with(mContext).load(noPosterUrl).into(imageView);
+        }
 
         return view;
 

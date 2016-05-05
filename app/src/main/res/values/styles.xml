@@ -2,16 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-
         <item name="colorPrimary">@color/movie_grey</item>
         <item name="colorPrimaryDark">@color/movie_dark_grey</item>
-
         <item name="android:windowBackground">@color/movie_dark_grey</item>
-        <item name="android:textColor">@color/color_title</item>
-
-
         <item name="actionBarStyle">@style/MyActionBar</item>
-
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
@@ -21,6 +15,7 @@
     <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title_color</item>
     </style>
+
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title_color</item>
         <item name="android:textStyle">bold</item>
@@ -38,29 +33,14 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-        <!-- main activity action bar styles -->
-
-
-           <!-- Customize your theme here. -->
-
-
-    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/color_title</item>
-        <item name="android:textSize">12sp</item>
-    </style>
     <style name="DetailTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/movie_dark_grey</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
-
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/menu_text</item>
-        <item name="colorControlActivated">@color/star_colr</item>
-
+        <item name="colorControlActivated">@color/star_color</item>
     </style>
-
-
-
 
 </resources>
