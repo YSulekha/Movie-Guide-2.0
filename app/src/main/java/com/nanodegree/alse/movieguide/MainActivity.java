@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +22,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Log.v("Inside OnCreateAcivity", "Main");
         //Restore the spinner value [Orientation change]
         if (savedInstanceState != null) {
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -86,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         editor.putString(getString(R.string.pref_sort_key), selection);
 
         //Store the position to access it in OnSaveInstance - handling Orientation change
-        editor.putInt("Position",position);
+        editor.putInt("Position", position);
         editor.commit();
-        Log.v("Inside OeateOptionsMenu", "Main");
+
 
         //Update the grid view when the user selects different option in spinner
         MoviedbFragment fragment = (MoviedbFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);

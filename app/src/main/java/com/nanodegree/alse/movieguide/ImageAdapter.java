@@ -1,7 +1,6 @@
 package com.nanodegree.alse.movieguide;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class ImageAdapter extends ArrayAdapter<String> {
             Picasso.with(mContext).load(imageURL).into(imageView);
         }
         else {
-            Log.v("ImageAdapter", url);
+            //When there is no poster image display "No poster" image.
             Picasso.with(mContext).load(noPosterUrl).into(imageView);
         }
 

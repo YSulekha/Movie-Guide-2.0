@@ -3,6 +3,8 @@ package com.nanodegree.alse.movieguide;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,26 +54,23 @@ public class MoviedbFragment extends Fragment {
         mImageAdapter = new ImageAdapter(getActivity(),R.layout.grid_view_movie);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
         gridView.setAdapter(mImageAdapter);
-        Log.v("Inside OnCreateAcivity", "Frag");
-
         //On click open detail ACtivity layout
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(),DetailActivity.class);
-                String value = (String)parent.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                String value = (String) parent.getItemAtPosition(position);
                 int k = 0;
 
                 //Decide from which array the value should be retrieved
-                if(position >= resultArray[0].length() ) {
+                if (position >= resultArray[0].length()) {
                     position = position % resultArray[0].length();
                     k++;
                 }
-                Log.v("Inside Listener", resultArray[k].toString());
                 //Sending Jsonstr to detail view to retrive ralated string values
                 intent.putExtra(Intent.EXTRA_TEXT, resultArray[k].toString());
-                intent.putExtra(DetailActivityFragment.POSITION,position);
+                intent.putExtra(DetailActivityFragment.POSITION, position);
                 startActivity(intent);
 
             }
@@ -87,12 +87,38 @@ public class MoviedbFragment extends Fragment {
         //Retrieve the preference value from Shared preference value
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String selection = sharedPref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
-        Log.v("InsideUpdate","dsfsd");
-        FetchMovieTask task = new FetchMovieTask();
-        task.execute(selection);
+        if(isOnline()) {
+            FetchMovieTask task = new FetchMovieTask();
+            task.execute(selection);
+        }
+        else{
+            //Avoiding the app crash when there is no internet
+            String text = "No internet connection. Please enable internet settings and reopen the Application";
+            Toast t = Toast.makeText(getActivity(),text,Toast.LENGTH_LONG);
+            t.show();
+            Thread thread = new Thread(){
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3500);
+                        getActivity().finish();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
+        }
+    }
+    //Function to check if the user is connected to network
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
-    //Function to format JSON string retrived from API call
+    //Function to format JSON string retrieved from API call
     public ArrayList<String> formatJSONStr(String[] jsonStr){
 
         String RESULTS_ARRAY = "results";
@@ -113,7 +139,6 @@ public class MoviedbFragment extends Fragment {
                     imageUrls.add(imageURL);
                     if(imageURL.equals("null")) {
                         String path = resultArray[j].getJSONObject(i).getString("backdrop_path");
-                        Log.v("path",path);
                    }
                 }
                j++;
