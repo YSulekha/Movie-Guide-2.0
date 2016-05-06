@@ -14,23 +14,8 @@
 
     <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title_color</item>
-    </style>
-
-    <style name="MyTheme.ActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/title_color</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">21sp</item>
-    </style>
-
-    <style name="ForecastTheme" parent="AppTheme">
-        <item name="actionBarStyle">@style/ActionBar.Solid.Sunshine.NoTitle</item>
-        <item name="titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
-    </style>
-    <!-- main activity action bar styles -->
-    <style name="ActionBar.Solid.Sunshine.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="displayOptions">useLogo|showTitle</item>
-        <item name="logo">@drawable/ic_movie_filter_red_600_18dp</item>
-        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="DetailTheme" parent="AppTheme">
