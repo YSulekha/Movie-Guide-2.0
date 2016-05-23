@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    //variable to store the position of spinner for Orientation change
+    //variable to store the position of spinner for orientation change
     private int SavedPosition = -1;
 
     @Override
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
     }
-
+   //Save the spinner position for Orientation change
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
