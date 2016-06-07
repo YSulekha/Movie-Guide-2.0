@@ -1,0 +1,34 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ly_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FEFEFE"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true"
+        >
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <ScrollView android:id="@+id/textAreaScroller"
+            android:layout_width="fill_parent"
+            android:layout_height="173px"
+            android:scrollbars="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/review"
+        android:textColor="@color/title_color"
+
+        />
+        </ScrollView>
+</LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
