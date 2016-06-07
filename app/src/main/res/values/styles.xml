@@ -18,8 +18,11 @@
         <item name="android:textSize">21sp</item>
     </style>
 
-    <style name="DetailTheme" parent="AppTheme">
-        <item name="android:windowBackground">@color/movie_dark_grey</item>
+    <style name="DetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/movie_grey</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 

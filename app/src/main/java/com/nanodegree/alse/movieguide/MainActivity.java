@@ -1,8 +1,10 @@
 package com.nanodegree.alse.movieguide;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,15 +15,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+        MoviedbFragment.OnClickItemListener{
 
     //variable to store the position of spinner for orientation change
     private int SavedPosition = -1;
+    boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(findViewById(R.id.detail)!=null){
+            mTwoPane = true;
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail,new DetailActivityFragment(),DETAILFRAGMENT_TAG).commit();
+        }
+        else
+         mTwoPane=false;
         //Restore the spinner value [Orientation change]
         if (savedInstanceState != null) {
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -78,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String selection = getResources().getStringArray(R.array.pref_sort_entryValues)[position];
 
         //Store the preference to file to access it fragment
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.pref_sort_key), selection);
 
@@ -95,5 +106,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onClickListen(String jsonStr, int position) {
+        if(mTwoPane){
+            Bundle b = new Bundle();
+            b.putString(DetailActivity.EXTRATEXT, jsonStr);
+            b.putInt(DetailActivity.POSITION, position);
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setArguments(b);
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail,fragment,DETAILFRAGMENT_TAG);
+
+        }
+        else{
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(DetailActivity.EXTRATEXT, jsonStr);
+            //  }
+            //Sending Jsonstr to detail view to retrive ralated string values
+
+            intent.putExtra(DetailActivity.POSITION, position);
+            startActivity(intent);
+
+        }
     }
 }

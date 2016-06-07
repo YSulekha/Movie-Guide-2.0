@@ -5,6 +5,7 @@
     <string name="pref_sort_top_rated">top_rated</string>
     <string name="pref_sort_upcoming">upcoming</string>
     <string name="pref_sort_now_playing">now_playing</string>
+    <string name="pref_sort_favorite">favorite</string>
     <string name="pref_sort_key">Sortorder</string>
     <string name="pref_sort_title">Sort Order</string>
     <string name="pref_sort_default">@string/pref_sort_popular</string>
@@ -13,11 +14,15 @@
         <item>Top Rated</item>
         <item>Upcoming</item>
         <item>Playing</item>
+        <item>Favorite</item>
     </string-array>
     <string-array name="pref_sort_entryValues">
         <item>@string/pref_sort_popular</item>
         <item>@string/pref_sort_top_rated</item>
         <item>@string/pref_sort_upcoming</item>
         <item>@string/pref_sort_now_playing</item>
+        <item>@string/pref_sort_favorite</item>
     </string-array>
+
+    <string name="pref_favorite_key">favorite</string>
 </resources>

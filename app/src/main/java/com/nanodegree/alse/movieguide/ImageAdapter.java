@@ -1,6 +1,9 @@
 package com.nanodegree.alse.movieguide;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 
 public class ImageAdapter extends ArrayAdapter<String> {
@@ -44,8 +50,23 @@ public class ImageAdapter extends ArrayAdapter<String> {
         }
         ImageView imageView = (ImageView)view.findViewById(R.id.movie_poster_image);
         String url = getItem(position);
+        if(url.equals("Bitmap")){
 
-        if (!url.equals("null")){
+            Bitmap b = null;
+
+            try {
+                FileInputStream fs = mContext.openFileInput("image");
+                b = BitmapFactory.decodeStream(fs);
+
+                Log.v("dsdfs", String.valueOf(b));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(b, 120, 120, false));
+        }
+
+       else if (!url.equals("null")){
             imageURL = IMAGE_BASEURL + url;
             Picasso.with(mContext).load(imageURL).into(imageView);
         }

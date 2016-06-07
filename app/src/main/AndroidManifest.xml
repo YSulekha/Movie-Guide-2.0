@@ -27,6 +27,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nanodegree.alse.movieguide.MainActivity" />
         </activity>
+        <provider
+            android:authorities="com.nanodegree.alse.movieguide.data"
+            android:name=".data.MovieProvider"/>
     </application>
 
 </manifest>
