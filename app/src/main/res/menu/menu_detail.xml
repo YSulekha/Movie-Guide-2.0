@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.nanodegree.alse.movieguide.DetailActivity">
+    tools:context="com.nanodegree.alse.movieguide.DetailFragment">
 
     <item
         android:title="Add to Favorite"

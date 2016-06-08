@@ -1,12 +1,13 @@
 package com.nanodegree.alse.movieguide;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,15 +28,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(findViewById(R.id.detail)!=null){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Log.v("InsideOnCreate", "DetailFrgament");
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Movie");
+        if(findViewById(R.id.fragment_container)!=null){
             mTwoPane = true;
-            getSupportFragmentManager().beginTransaction().replace(R.id.detail,new DetailActivityFragment(),DETAILFRAGMENT_TAG).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DetailFragment(),DETAILFRAGMENT_TAG).commit();
         }
         else
          mTwoPane=false;
         //Restore the spinner value [Orientation change]
         if (savedInstanceState != null) {
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             SavedPosition = sharedPref.getInt("Position", 0);
         }
 
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Store the spinner position when activity is destroyed
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int position = sharedPref.getInt("Position", 0);
         outState.putInt("position", position);
     }
@@ -112,20 +118,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onClickListen(String jsonStr, int position) {
         if(mTwoPane){
             Bundle b = new Bundle();
-            b.putString(DetailActivity.EXTRATEXT, jsonStr);
-            b.putInt(DetailActivity.POSITION, position);
+            b.putString(DetailActivity_old.EXTRATEXT, jsonStr);
+            b.putInt(DetailActivity_old.POSITION, position);
             DetailActivityFragment fragment = new DetailActivityFragment();
             fragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction().replace(R.id.detail,fragment,DETAILFRAGMENT_TAG);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment,DETAILFRAGMENT_TAG);
 
         }
         else{
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(DetailActivity.EXTRATEXT, jsonStr);
+            Intent intent = new Intent(this, DetailActivity_old.class);
+            intent.putExtra(DetailActivity_old.EXTRATEXT, jsonStr);
             //  }
             //Sending Jsonstr to detail view to retrive ralated string values
 
-            intent.putExtra(DetailActivity.POSITION, position);
+            intent.putExtra(DetailActivity_old.POSITION, position);
             startActivity(intent);
 
         }

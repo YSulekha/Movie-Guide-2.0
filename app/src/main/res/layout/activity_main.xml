@@ -1,3 +1,18 @@
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="8dp"
+    android:background="@color/movie_dark_grey"
+    android:title="@string/app_name"
+    android:titleTextColor="@color/title_color"
+   />
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
@@ -6,5 +21,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     />
+</RelativeLayout>
 
 

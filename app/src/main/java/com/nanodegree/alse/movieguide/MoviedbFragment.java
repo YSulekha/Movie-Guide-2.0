@@ -76,6 +76,7 @@ public class MoviedbFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Log.v("InsideOnclick", mImageAdapter.getItem(position));
+          //      Log.v("ddffd",resultArray.toString());
                 String selection = Utility.getSelectionValue(getActivity());
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 String value = (String) parent.getItemAtPosition(position);
@@ -89,16 +90,27 @@ public class MoviedbFragment extends Fragment {
                 //  else {
 
                 //Decide from which array the value should be retrieved
-                if (position >= resultArray[0].length()) {
-                    position = position % resultArray[0].length();
-                    k++;
+                if(selection.equals(getString(R.string.pref_sort_favorite))){
+                    intent.putExtra(DetailFragment.EXTRATEXT, "null");
+                    intent.putExtra(DetailFragment.POSITION, position);
+                    startActivityForResult(intent, 0);
                 }
-                intent.putExtra(Intent.EXTRA_TEXT, resultArray[k].toString());
+                else {
+                    if (position >= resultArray[0].length()) {
+
+                        position = position % resultArray[0].length();
+                        k++;
+                        Log.v("ddffd", resultArray[k].toString());
+
+                    }
+                    intent.putExtra(DetailFragment.EXTRATEXT, resultArray[k].toString());
+                    intent.putExtra(DetailFragment.POSITION, position);
+                    startActivityForResult(intent, 0);
+                }
+
                 //  }
                 //Sending Jsonstr to detail view to retrive ralated string values
 
-                intent.putExtra(DetailActivityFragment.POSITION, position);
-                startActivityForResult(intent, 0);
                 //  startActivity(intent);
 
 
@@ -111,7 +123,8 @@ public class MoviedbFragment extends Fragment {
         // Check which request we're responding to
         if (requestCode == 0) {
             // Make sure the request was successful
-            if (data.hasExtra("IsChanged")) {
+            Log.v("onact","insideif");
+            if (data!=null && data.hasExtra("IsChanged")) {
                 Log.v("onActivityResult",Utility.getSelectionValue(getActivity()));
                 if(Utility.getSelectionValue(getActivity()).equals("favorite")&&
                         data.getStringExtra("IsChanged").equals("true")){

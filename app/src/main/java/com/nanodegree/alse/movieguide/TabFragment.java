@@ -48,8 +48,8 @@ public class TabFragment extends Fragment {
         try {
             //JSONArray resultArray = new JSONArray(value);
           //  JSONObject object = resultArray.getJSONObject(position);
-         //   JSONObject object = ((DetailActivity)getActivity()).getjsonObject();
-            int movieId = ((DetailActivity)getActivity()).movie.movieId;
+         //   JSONObject object = ((DetailActivity_old)getActivity()).getjsonObject();
+            int movieId = DetailFragment.movie.movieId;
             FetchReview fetchReview = new FetchReview();
             fetchReview.execute(movieId);
 

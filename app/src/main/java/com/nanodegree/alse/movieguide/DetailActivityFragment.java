@@ -2,6 +2,8 @@ package com.nanodegree.alse.movieguide;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +50,14 @@ public class DetailActivityFragment extends Fragment {
         String imageURL = null;
         int id = 0;
         String noPosterUrl = "https://assets.tmdb.org/assets/f996aa2014d2ffddfda8463c479898a3/images/no-poster-w185.jpg";
-      //  JSONObject object = ((DetailActivity)getActivity()).getjsonObject();
-        movie = DetailActivity.movie;
+        Log.v("DetailFr",DetailFragment.movie.toString());
+        movie = DetailFragment.movie;
+ //       getjsonObject();
+
     /*    try {
         //    JSONArray resultArray = new JSONArray(value);
         //    JSONObject object = resultArray.getJSONObject(position);
-            JSONObject object = ((DetailActivity)getActivity()).getjsonObject();
+            JSONObject object = ((DetailActivity_old)getActivity()).getjsonObject();
             if(object == null){
 
             }
@@ -84,7 +88,7 @@ public class DetailActivityFragment extends Fragment {
      //   ImageView toolImage = (ImageView)toolbar.findViewById(R.id.tool_image);
 
 
-        if (!movie.posterUrl.equals("null")){
+        if (movie.posterUrl!=null && !movie.posterUrl.equals("null")){
             imageURL = IMAGE_BASEURL + movie.posterUrl;
 
             //  Picasso.with(getActivity()).load(imageURL).into(mimageView);
@@ -94,9 +98,9 @@ public class DetailActivityFragment extends Fragment {
         }
         else {
 
-            Picasso.with(getActivity()).load(noPosterUrl).into(mimageView);
+            Picasso.with(getActivity()).load(noPosterUrl).into(toolImage);
         }
-        ((DetailActivity)getActivity()).setposter(movie.posterUrl,toolImage);
+     //   ((DetailActivity_old)getActivity()).setposter(movie.posterUrl,toolImage);
 
         //Set description
         TextView desc = (TextView)root.findViewById(R.id.detail_overview);
@@ -110,12 +114,14 @@ public class DetailActivityFragment extends Fragment {
         //change rating in terms of 5
         rate.setRating((float) ((movie.rating * 5) / 10));
 
-
+        Log.v("InsideDetailActivity", ((AppCompatActivity) getActivity()).getClass().getName());
         //Set the Movie title to title of action bar
-        getActivity().setTitle(movie.title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(movie.title);
+
 
 
         return root;
     }
+
 
 }
