@@ -13,4 +13,14 @@
         >
     </ListView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/review_emptyView"
+        android:text="No Review"
+        android:gravity="center_horizontal"
+        android:textColor="@color/title_color"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"/>
+
 </FrameLayout>

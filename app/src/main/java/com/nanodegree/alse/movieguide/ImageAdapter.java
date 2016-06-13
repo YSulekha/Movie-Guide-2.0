@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -50,6 +51,7 @@ public class ImageAdapter extends ArrayAdapter<String> {
         }
         ImageView imageView = (ImageView)view.findViewById(R.id.movie_poster_image);
         String url = getItem(position);
+
         if(url.equals("Bitmap")){
 
             Bitmap b = null;
@@ -65,11 +67,17 @@ public class ImageAdapter extends ArrayAdapter<String> {
 
             imageView.setImageBitmap(Bitmap.createScaledBitmap(b, 120, 120, false));
         }
+        else if(Utility.getSelectionValue(mContext).equals("favorite")){
+
+            File file = new File(url);
+            Picasso.with(mContext).load(file).into(imageView);
+        }
 
        else if (!url.equals("null")){
             imageURL = IMAGE_BASEURL + url;
             Picasso.with(mContext).load(imageURL).into(imageView);
         }
+
         else {
             //When there is no poster image display "No poster" image.
             Picasso.with(mContext).load(noPosterUrl).into(imageView);

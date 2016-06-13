@@ -1,12 +1,11 @@
 package com.nanodegree.alse.movieguide;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 
 /**
  * Created by aharyadi on 6/7/16.
@@ -16,30 +15,50 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+   /*     getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail2);
+        Log.v("InsideDetailActivity", "a124");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
 
      //   android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()). getSupportActionBar();
-        if (savedInstanceState == null) {
+     //   if (savedInstanceState == null) {
 
          //   Bundle bundle = new Bundle();
          //   bundle.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+            Log.v("InsideDetailActivity","a123");
+            Bundle bundle = new Bundle();
+            Intent intent = getIntent();
+            bundle.putString(DetailFragment.EXTRATEXT,intent.getStringExtra(DetailFragment.EXTRATEXT));
+            bundle.putInt(DetailFragment.POSITION, intent.getIntExtra(DetailFragment.POSITION, 0));
+            Log.v("DetailIntent", String.valueOf(intent.getIntExtra(DetailFragment.POSITION, 0)));
 
             DetailFragment fragment = new DetailFragment();
-        //    fragment.setArguments(bundle);
+            fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, fragment,DETAILFRAGMENT_TAG)
                     .commit();
-        }
-      //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+      //  }
 
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

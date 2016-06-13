@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.nanodegree.alse.movieguide.data.MovieContract;
 
@@ -45,6 +43,8 @@ public class MoviedbFragment extends Fragment {
     ImageAdapter mImageAdapter;
     Cursor cursor;
     OnClickItemListener mListener;
+    boolean isFirst = false;
+     String prevSelection;
 
     JSONArray [] resultArray = new JSONArray[2]; //Array to store the result of two pages retrieved from MovieDb API
     final String LOGTAG = MoviedbFragment.class.getSimpleName();
@@ -58,7 +58,7 @@ public class MoviedbFragment extends Fragment {
 
     }
     public interface OnClickItemListener{
-        public void onClickListen(String jsonStr,int Position);
+        public void onClickListen(String jsonStr,int Position,boolean isFirst);
 
     }
 
@@ -68,7 +68,9 @@ public class MoviedbFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
         mImageAdapter = new ImageAdapter(getActivity(),R.layout.grid_view_movie);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
+        TextView emptyView = (TextView) rootView.findViewById(R.id.listview_emptyView);
         gridView.setAdapter(mImageAdapter);
+        gridView.setEmptyView(emptyView);
         //On click open detail ACtivity layout
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -93,7 +95,8 @@ public class MoviedbFragment extends Fragment {
                 if(selection.equals(getString(R.string.pref_sort_favorite))){
                     intent.putExtra(DetailFragment.EXTRATEXT, "null");
                     intent.putExtra(DetailFragment.POSITION, position);
-                    startActivityForResult(intent, 0);
+                    mListener.onClickListen("null", position,isFirst);
+                //    startActivityForResult(intent, 0);
                 }
                 else {
                     if (position >= resultArray[0].length()) {
@@ -105,7 +108,8 @@ public class MoviedbFragment extends Fragment {
                     }
                     intent.putExtra(DetailFragment.EXTRATEXT, resultArray[k].toString());
                     intent.putExtra(DetailFragment.POSITION, position);
-                    startActivityForResult(intent, 0);
+                    mListener.onClickListen(resultArray[k].toString(),position,isFirst);
+                 //   startActivityForResult(intent, 0);
                 }
 
                 //  }
@@ -129,7 +133,7 @@ public class MoviedbFragment extends Fragment {
                 if(Utility.getSelectionValue(getActivity()).equals("favorite")&&
                         data.getStringExtra("IsChanged").equals("true")){
                     Log.v("onActivityResult2",Utility.getSelectionValue(getActivity()));
-                    displayFavorite();
+                    displayFavorite(getActivity());
                    // mImageAdapter.notifyDataSetChanged();
                 }
                 // The user picked a contact.
@@ -173,44 +177,50 @@ public class MoviedbFragment extends Fragment {
 
         //Retrieve the preference value from Shared preference value
         String selection = Utility.getSelectionValue(getActivity());
-        Log.v("Selection",selection);
+        Log.v("updateMovieList",selection+prevSelection);
         if(selection.equals(getString(R.string.pref_sort_favorite))){
-            displayFavorite();
+            displayFavorite(getActivity());
         }
         else {
-            if (isOnline()) {
+         //   if (Utility.isOnline(getActivity())) {
+                if(resultArray[0] == null || !selection.equals(prevSelection)){
+                    isFirst = true;
+                }
                 FetchMovieTask task = new FetchMovieTask();
-                task.execute(selection);
-            } else {
+              //  resultArray = new JSONArray[2];
+            task.execute(selection);
+                Log.v("updateMovieList", String.valueOf(isFirst));
+
+         //   }
+            //else {
+               // displayFavorite(getActivity());
                 //Avoiding the app crash when there is no internet
-                String text = "No internet connection. Please enable internet settings and reopen the Application";
+            /*    String text = "No internet connection. Please enable internet settings and reopen the Application";
                 Toast t = Toast.makeText(getActivity(), text, Toast.LENGTH_LONG);
-                t.show();
-                Thread thread = new Thread() {
+                t.show();*/
+            //   RelativeLayout rl = (RelativeLayout)getActivity().findViewById(R.id.relativeId);
+              //  FrameLayout fl = (FrameLayout)getActivity().findViewById(R.id.movie_fragment);
+              //  rl.removeAllViews();
+              //  fl.removeAllViews();
+           /*    Thread thread = new Thread() {
                     @Override
                     public void run() {
                         try {
                             Thread.sleep(3500);
-                            getActivity().finish();
+                            getActivity().s
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 };
-                thread.start();
-            }
+                thread.start();*/
+          //  }
         }
     }
-    //Function to check if the user is connected to network
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
 
-    public void displayFavorite(){
-     /*   SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+    public void displayFavorite(Context context){
+     /*  SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String selection = shared.getString(getString(R.string.pref_favorite_key), null);
 
         String text = "There is no movie in favorites";
@@ -230,16 +240,25 @@ public class MoviedbFragment extends Fragment {
             }
         }*/
      //   resultArray=null;
-        cursor = getActivity().getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+        cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
                 new String[]{MovieContract.MovieEntry.COLUMN_IMG_SRC},
         null,null,null,null);
 
         mImageAdapter.clear();
+        if(cursor.getCount()==0){
+            TextView emptyView = (TextView) getView().findViewById(R.id.listview_emptyView);
+            emptyView.setText("No Favorites in your list");
+        }
         while(cursor.moveToNext()){
             String posterUrl = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMG_SRC));
+            Log.v("Favorite",posterUrl);
             mImageAdapter.add(posterUrl);
         }
         cursor.close();
+        String selection = Utility.getSelectionValue(getActivity());
+        if(!selection.equals(prevSelection)) {
+            mListener.onClickListen(null, 0, true);
+        }
 
    //     mImageAdapter.clear();
      //   mImageAdapter.add("Bitmap");
@@ -269,6 +288,7 @@ public class MoviedbFragment extends Fragment {
         ArrayList<String> imageUrls = new ArrayList<String>();
         int j = 0;
         int len = jsonStr.length;
+        Log.v("Insideformat",String.valueOf(len));
         JSONObject jsonOutput = null;
 
         try {
@@ -276,6 +296,7 @@ public class MoviedbFragment extends Fragment {
             while(j < len) {
                 jsonOutput = new JSONObject(jsonStr[j]);
                 resultArray[j] = jsonOutput.getJSONArray(RESULTS_ARRAY);
+              //  Log.v("dfsfd",jsonStr[j]);
                 for (int i = 0; i < resultArray[j].length(); i++) {
                     String imageURL = resultArray[j].getJSONObject(i).getString(POSTER_PATH);
                     imageUrls.add(imageURL);
@@ -309,6 +330,7 @@ public class MoviedbFragment extends Fragment {
             String path = params[0];
             String apiKey = BuildConfig.MOVIE_DB_API_KEY;
             String [] appendedJson = new String[2];
+           // Log.v("insideBack",jsonStr);
             try {
                 for(int i = 1;i < 3;i++) {
                     Uri uri = Uri.parse(BASE_URI).buildUpon().appendPath(path).
@@ -329,16 +351,23 @@ public class MoviedbFragment extends Fragment {
                     StringBuffer buffer = new StringBuffer();
                     String line;
                     while ((line = reader.readLine()) != null) {
+                       // Log.v("line",line);
                         buffer.append(line + "/n");
                     }
-                    if (buffer.length() == 0)
+                    if (buffer.length() == 0) {
                         return null;
+                    }
                     jsonStr = buffer.toString();
+
                     appendedJson[i-1] = jsonStr;
+                  //  Log.v("insideBack",jsonStr);
                 }
+                return formatJSONStr(appendedJson);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error connecting to API" + e.getMessage());
+                appendedJson=null;
+
             }
             finally {
                 if(connection != null)
@@ -346,22 +375,38 @@ public class MoviedbFragment extends Fragment {
                 if(reader != null)
                     try {
                         reader.close();
+                        Log.v("InsideClose","sdsd");
                     } catch (IOException e) {
                         Log.d(LOGTAG, "Error closing reader" + e.getMessage());
                     }
             }
-            return formatJSONStr(appendedJson);
+           return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> jsonStr){
-            if(jsonStr != null){
+        protected void onPostExecute(ArrayList<String> jsonStr) {
+         //   Log.v("Inside PostExecute","hhhh");
+            if (jsonStr != null) {
                 mImageAdapter.clear();
-                for (int i = 0;i < jsonStr.size();i++){
+                for (int i = 0; i < jsonStr.size(); i++) {
                     mImageAdapter.add(jsonStr.get(i));
                 }
             }
+            else{
+                mImageAdapter.clear();
+                TextView emptyView = (TextView) getView().findViewById(R.id.listview_emptyView);
+                emptyView.setText("No Internet Connection");
+            }
+            if (resultArray[0]!=null && isFirst == true){
+
+                mListener.onClickListen(resultArray[0].toString(), 0, true);
+             }
+            isFirst = false;
+
+
+
         }
+
     }
 
 }

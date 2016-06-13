@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/movie_grey</item>
         <item name="colorPrimaryDark">@color/movie_dark_grey</item>
         <item name="android:windowBackground">@color/movie_dark_grey</item>
@@ -16,13 +16,13 @@
         <item name="android:textColor">@color/title_color</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">21sp</item>
+
     </style>
 
-    <style name="DetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DetailTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/movie_grey</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-
-        <item name="android:windowActionBarOverlay">true</item>
+        <item name="colorPrimaryDark">@color/movie_dark_grey</item>
+        <item name="android:windowBackground">@color/movie_dark_grey</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 

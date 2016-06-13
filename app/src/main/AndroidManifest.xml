@@ -29,7 +29,8 @@
         </activity>
         <provider
             android:authorities="com.nanodegree.alse.movieguide.data"
-            android:name=".data.MovieProvider"/>
+            android:name=".data.MovieProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>

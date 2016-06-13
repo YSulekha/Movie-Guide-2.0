@@ -22,7 +22,7 @@
             android:paddingTop="10dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:textColor="@color/movie_dark_grey" />
+            android:textColor="@color/menu_text" />
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:id="@+id/detail_overview"
             android:textSize="16sp"
             android:textIsSelectable="true"
-            android:textColor="@color/movie_dark_grey"
+            android:textColor="@color/menu_text"
             android:outlineProvider="background"
             android:fontFamily="sans-serif-medium"/>
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,8 @@ public class TabFragment extends Fragment {
         mReviewAdater = new ArrayAdapter(getActivity(),R.layout.list_item,R.id.review,data);
 
         ListView listView = (ListView) rootView.findViewById(R.id.list_view_review);
+        TextView textView = (TextView)rootView.findViewById(R.id.review_emptyView);
+        listView.setEmptyView(textView);
         listView.setAdapter(mReviewAdater);
       /*  Intent intent = getActivity().getIntent();
         String value = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -82,7 +85,7 @@ public class TabFragment extends Fragment {
                     appendQueryParameter(PARAM_APIKEY, BuildConfig.MOVIE_DB_API_KEY).build();
             try {
                 URL url = new URL(uri.toString());
-                Log.v("InsideTask",uri.toString());
+          //      Log.v("InsideTask",uri.toString());
                 connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -99,7 +102,7 @@ public class TabFragment extends Fragment {
                 if (buffer.length() == 0)
                     return null;
                 jsonStr = buffer.toString();
-                Log.v("fdfg",jsonStr);
+                //Log.v("fdfg",jsonStr);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -124,23 +127,29 @@ public class TabFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
           //  super.onPostExecute(strings);
-            mReviewAdater.clear();
-            for(String review:strings){
-                Log.v("InsideTask", "Post");
+            if(strings !=null) {
+                mReviewAdater.clear();
+                for (String review : strings) {
+              //      Log.v("InsideTask", "Post");
 
-                mReviewAdater.add(review);
+                    mReviewAdater.add(review);
+                }
+            }
+            else{
+                TextView textView = (TextView)getView().findViewById(R.id.review_emptyView);
+                textView.setText("No Reviews");
             }
         }
     }
     public ArrayList<String> formatJSONStr(String jsonStr){
         ArrayList<String> reviews = new ArrayList<String>();
-        Log.v("JSONSTR",jsonStr);
+     //   Log.v("JSONSTR",jsonStr);
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONArray results = jsonObject.getJSONArray("results");
             for(int i=0;i<results.length();i++){
                 String review = results.getJSONObject(i).getString("content");
-                Log.v("JSONSTR",review);
+             //   Log.v("JSONSTR",review);
                 reviews.add(review);
             }
 

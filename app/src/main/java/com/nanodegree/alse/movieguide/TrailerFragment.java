@@ -40,7 +40,8 @@ public class TrailerFragment extends Fragment {
         try {
          //   JSONArray resultArray = new JSONArray(value);
            // JSONObject object = resultArray.getJSONObject(position);
-            JSONObject object = ((DetailActivity_old)getActivity()).getjsonObject();
+            JSONObject object = null;
+                    //((DetailActivity_old)getActivity()).getjsonObject();
             movieId = object.getInt("id");
 
         } catch (JSONException e) {

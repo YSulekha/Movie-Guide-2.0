@@ -2,9 +2,13 @@ package com.nanodegree.alse.movieguide;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +18,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +30,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.nanodegree.alse.movieguide.data.MovieContract;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,11 +60,17 @@ public class DetailFragment extends Fragment {
     public static Movie movie=new Movie();
     boolean pressed = false;
     boolean dataChanged = false;
-    MyContentObserver ob;
+  //  MyContentObserver ob;
     FloatingActionButton FAB;
+    OnChangeListener mListener;
 
     public DetailFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -67,74 +80,99 @@ public class DetailFragment extends Fragment {
 
 
     }
+    public interface OnChangeListener{
+        public void onChangeListen();
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mListener = (OnChangeListener)activity;
+        }
+        catch(ClassCastException ex){
+            Log.d("Fragment",activity.getLocalClassName()+" does not implement listener class"+OnChangeListener.class);
+        }
+
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView =  inflater.inflate(R.layout.fragment_detail2, container, false);
-        toolbar = (Toolbar)rootView.findViewById(R.id.tool_bar).findViewById(R.id.toolbar_actionbar);
+        View rootView =  inflater.inflate(R.layout.detail_fragment, container, false);
+    //    if(savedInstanceState==null) {
+            Log.v("InsideDetailFragment","add");
+      /*  toolbar = (Toolbar)rootView.findViewById(R.id.tool_bar).findViewById(R.id.toolbar_actionbar);
         Log.v("InsideOnCreate", "DetailFrgament");
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
 
-        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()). getSupportActionBar();
-        TabLayout t = (TabLayout)rootView.findViewById(R.id.tabs);
-        t.addTab(t.newTab().setText("Detail"), 0);
-        t.addTab(t.newTab().setText("Review"), 1);
-        //  t.addTab(t.newTab().setText("Trailer"), 2);
-        t.setTabTextColors(ContextCompat.getColorStateList(getActivity(), R.color.title_color));
-        t.setTabGravity(t.GRAVITY_FILL);
+        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()). getSupportActionBar();*/
 
-        final ViewPager viewPager = (ViewPager)rootView.findViewById(R.id.viewpager);
+            TabLayout t = (TabLayout) rootView.findViewById(R.id.tabs);
+            t.addTab(t.newTab().setText("Detail"), 0);
+            t.addTab(t.newTab().setText("Review"), 1);
+            //  t.addTab(t.newTab().setText("Trailer"), 2);
+            t.setTabTextColors(ContextCompat.getColorStateList(getActivity(), R.color.title_color));
+            t.setTabGravity(t.GRAVITY_FILL);
 
-        mpagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        viewPager.setAdapter(mpagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(t));
-        t.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            mpagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+            viewPager.setAdapter(mpagerAdapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(t));
+            t.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
 
-            }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                }
 
-            }
-        });
-     //   ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      //  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        FAB = (FloatingActionButton) rootView. findViewById(R.id.fab);
-        FAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addToFavorite();
-            }
-        });
-        String value=null;
-        Intent intent = getActivity().getIntent();
-        if(intent.hasExtra(Intent.EXTRA_TEXT)) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+            //   ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            FAB = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            FAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToFavorite();
+                }
+            });
+            String value = null;
+            //   Intent intent = getActivity().getIntent();
+  /*      if(intent.hasExtra(Intent.EXTRA_TEXT)) {
             value = intent.getStringExtra(Intent.EXTRA_TEXT);
         }
-        int position = intent.getIntExtra(POSITION, 0);
-        ob = new MyContentObserver(null);
-        getjsonObject();
-    //    movie = new Movie();
-        ImageView poster = (ImageView)rootView.findViewById(R.id.tool_bar).findViewById(R.id.imageViewplaces);
-        poster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickVideo(v);
+        int position = intent.getIntExtra(POSITION, 0);*/
+            //  ob = new MyContentObserver(null);
+            getjsonObject();
+            if (movie.movieId == -1) {
+
+                return null;
             }
-        });
+            //    movie = new Movie();
+       //     ImageView poster = (ImageView) rootView.findViewById(R.id.detail_ImageView);
+            ImageView poster = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickVideo(v);
+                }
+            });
 
-
+    //    }
         return rootView;
     }
 
@@ -150,7 +188,7 @@ public class DetailFragment extends Fragment {
 
 
         if(pressed){
-            FAB.setImageResource(R.drawable.ic_favorite_red_500_36dp);
+            FAB.setImageResource(R.drawable.ic_favorite_border_red_500_48dp);
             pressed=false;
             Uri uri = MovieContract.MovieEntry.CONTENT_URI;
             String where = MovieContract.MovieEntry.COLUMN_MOV_KEY+"=?";
@@ -158,6 +196,9 @@ public class DetailFragment extends Fragment {
             int rowsDeleted = getActivity().getContentResolver().delete(uri, where, selectionArgs);
             Log.v("ssgsgg", String.valueOf(rowsDeleted));
             text = "Removed from favorite";
+            if(mListener!=null) {
+                mListener.onChangeListen();
+            }
             Intent data = new Intent();
             dataChanged = true;
             data.putExtra("IsChanged", String.valueOf(dataChanged));
@@ -167,6 +208,12 @@ public class DetailFragment extends Fragment {
 
         }
         else {
+            String IMAGE_BASEURL = "http://image.tmdb.org/t/p/w185/";
+            String imageURL = IMAGE_BASEURL + movie.posterUrl;
+            Picasso.with(getActivity()).load(imageURL).into(picassoImageTarget(getActivity().getApplicationContext(), "imageDir", movie.title + ".jpeg"));
+            ContextWrapper cw = new ContextWrapper(getActivity());
+            File dir = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            File file = new File(dir,movie.title + ".jpeg");
 
             Uri uri = MovieContract.MovieEntry.CONTENT_URI;
             ContentValues values = new ContentValues();
@@ -175,12 +222,13 @@ public class DetailFragment extends Fragment {
             values.put(MovieContract.MovieEntry.COLUMN_SHORT_DESC, movie.overview);
             values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.date);
             values.put(MovieContract.MovieEntry.COLUMN_RATING, movie.rating);
-            values.put(MovieContract.MovieEntry.COLUMN_IMG_SRC, movie.posterUrl);
+            values.put(MovieContract.MovieEntry.COLUMN_IMG_SRC, file.getAbsolutePath());
+            movie.posterUrl=file.getAbsolutePath();
             Uri returnUri = getActivity().getContentResolver().insert(uri, values);
             Log.v("ssgsgg", returnUri.toString());
 
 
-            FAB.setImageResource(R.drawable.ic_movie_filter_red_600_18dp);
+            FAB.setImageResource(R.drawable.ic_favorite_red_500_48dp);
             pressed=true;
             Log.v("ssgsgg", String.valueOf(FAB.isPressed()));
         }
@@ -213,12 +261,51 @@ public class DetailFragment extends Fragment {
 
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
 
+    private Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
+        Log.d("picassoImageTarget", " picassoImageTarget");
+        ContextWrapper cw = new ContextWrapper(context);
+        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
+        Log.v("Picasso",directory.getAbsolutePath());
+        final File myImageFile = new File(directory, imageName);
+        Log.v("Picasso",myImageFile.getAbsolutePath());
+        return new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                         // Create image file
+
+                        FileOutputStream fos = null;
+                        try {
+                            fos = new FileOutputStream(myImageFile);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                Log.v("picassoImage",myImageFile.getAbsolutePath());
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.v("image", "image saved to >>>" + myImageFile.getAbsolutePath());
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                if (placeHolderDrawable != null) {}
+            }
+        };
     }
-
 
 
     public void processJSON(JSONObject object){
@@ -249,28 +336,33 @@ public class DetailFragment extends Fragment {
             return false;
     }
     public JSONObject getjsonObject(){
-        Log.v("Insidegetjson","dsffd");
+    /*    Log.v("Insidegetjson","dsffd");
         Intent intent = getActivity().getIntent();
-        JSONObject resultObject = null;
+
         String value = intent.getStringExtra(EXTRATEXT);
    //     Log.v("Insidegetjson",value);
-        int position = intent.getIntExtra(POSITION, 0);
-        if(Utility.getSelectionValue(getActivity()).equals(getString(R.string.pref_favorite_key))){
-            getFavorite(position);
-            FAB.setImageResource(R.drawable.ic_movie_filter_red_600_18dp);
-            pressed=true;
+        int position = intent.getIntExtra(POSITION, 0);*/
+        JSONObject resultObject = null;
+        Bundle bundle = getArguments();
+        if(bundle!=null) {
+            String value = bundle.getString(EXTRATEXT);
+            int position = bundle.getInt(POSITION);
+            if (Utility.getSelectionValue(getActivity()).equals(getString(R.string.pref_favorite_key))) {
+                getFavorite(position);
+                FAB.setImageResource(R.drawable.ic_movie_filter_red_600_18dp);
+                pressed = true;
 
-        }
-        else if(value!=null){
-       //else{
+            } else if (value != null) {
+                //else{
 
-            try {
-                JSONArray resultArray = new JSONArray(value);
-                resultObject = resultArray.getJSONObject(position);
-                processJSON(resultObject);
+                try {
+                    JSONArray resultArray = new JSONArray(value);
+                    resultObject = resultArray.getJSONObject(position);
+                    processJSON(resultObject);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return resultObject;
@@ -279,7 +371,7 @@ public class DetailFragment extends Fragment {
     public void getFavorite(int position){
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
         Cursor cursor = Utility.queryFavoriteTable(getActivity(), uri);
-        if(cursor!=null){
+        if(cursor.getCount()!=0){
             cursor.moveToPosition(position);
             movie.movieId = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOV_KEY));
             movie.title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
@@ -288,6 +380,10 @@ public class DetailFragment extends Fragment {
             movie.date = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
             movie.rating = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
             movie.posterUrl = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMG_SRC));
+
+        }
+        else{
+            movie.movieId=-1;
 
         }
     }
