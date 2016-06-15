@@ -13,16 +13,17 @@
         android:id="@+id/detail_fragment">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:typeface="normal"
             android:id="@+id/detail_release_date"
             android:fontFamily="sans-serif"
-            android:paddingTop="10dp"
+            android:paddingTop="18dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:textColor="@color/menu_text" />
+            android:textColor="@color/menu_text"
+            android:freezesText="true"/>
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

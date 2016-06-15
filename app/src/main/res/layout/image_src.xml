@@ -10,6 +10,7 @@
         android:adjustViewBounds="true"
         android:scrollbars="vertical"
         android:clickable="true"
+
        />
 
     <ImageView

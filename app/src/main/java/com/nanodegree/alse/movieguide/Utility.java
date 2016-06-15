@@ -8,9 +8,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-/**
- * Created by aharyadi on 6/4/16.
- */
 public class Utility {
 
     public static String getSelectionValue(Context context){

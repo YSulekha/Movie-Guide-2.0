@@ -9,6 +9,7 @@
         android:layout_margin="8dp"
         app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true"
+
         >
 
     <LinearLayout
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/review"
         android:textColor="@color/title_color"
+        android:freezesText="true"
 
         />
         </ScrollView>
