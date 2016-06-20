@@ -13,4 +13,4 @@ Note:
   
 ##App Walkthrough   
    
- <img src='https://github.com/YSulekha/MovieGuide/blob/master/GMovieGuideStage2.gif' title='App Walkthrough' width='' alt='App Walkthrough' />
+ <img src='https://github.com/YSulekha/MovieGuideStage2/blob/master/GMovieGuideStage2.gif' title='App Walkthrough' width='' alt='App Walkthrough' />
