@@ -247,11 +247,11 @@ public class FragmentDetail extends Fragment {
         t.show();
     }
 
-
+    //Referred some blogs to understand how to store images in internal memory
     private Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
         ContextWrapper cw = new ContextWrapper(context);
-        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
-        final File myImageFile = new File(directory, imageName);
+        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); 
+        final File imageFile = new File(directory, imageName);
         return new Target() {
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -262,7 +262,7 @@ public class FragmentDetail extends Fragment {
 
                         FileOutputStream fos = null;
                         try {
-                            fos = new FileOutputStream(myImageFile);
+                            fos = new FileOutputStream(imageFile);
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         } catch (IOException e) {
                             e.printStackTrace();
