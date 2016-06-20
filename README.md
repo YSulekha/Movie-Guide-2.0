@@ -1,16 +1,16 @@
 # The Movie Guide
 
-The Movie Guide stage 2 is an Android application for displaying the popular and top rated box office movies using 
-the MovieDB API. This is an improvement to the movie guide stage 1 where i added new functionality and also changed the UI to incorporate Material design
+The Movie Guide - Stage 2 is an Android application for displaying the popular and top rated box office movies using 
+the MovieDB API. This is enhancement to The Movie guide application. Here, I have added new functionalities and incorporated Material design based user interface.
 
-App can help users to view the list of popular, top rated, upcoming and movies that are playing in the theatres. Users can select these options from the drop down menu in the home page.
-  User can click on the movie poster which navigates to the detail page with additional information such as rating, release date, trailers,reviews and synopsis.
+This Application can help users to view the list of popular, top rated, now-playing and  upcoming Hollywood movies. 
+  A click on the movie posted in main screen navigates to the very useful details page which contains additional information such as rating, release date, trailers,reviews and synopsis.
 
-  In the detail page, User can watch the trailer by clicking on the movie poster and also can share the video URL.
+  In the details page, Users can watch the trailer by clicking on the movie poster and also can share the video URL. Any movie can be added to the Favorites collection and can be seen even when there is no internet connection.
 
 Note:
   Please initialize "MyMovieDbApiKey" parameter in gradle.properties with your MovieDB Api key.
   
 ##App Walkthrough   
    
- <img src='https://github.com/YSulekha/MovieGuide/blob/master/GMovieGuideStage.gif' title='App Walkthrough' width='' alt='App Walkthrough' />
+ <img src='https://github.com/YSulekha/MovieGuide/blob/master/GMovieGuideStage2.gif' title='App Walkthrough' width='' alt='App Walkthrough' />
