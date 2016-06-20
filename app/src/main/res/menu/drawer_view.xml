@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@drawable/ic_play_arrow_red_500_48dp"
+            android:title="@string/pref_sort_Popular"
+            android:id="@+id/drawer_popular"
+            android:checked="true"/>
+        <item
+            android:icon="@drawable/ic_play_arrow_red_500_48dp"
+            android:title="@string/pref_sort_Top_rated"
+            android:id="@+id/drawer_topRated"/>
+        <item
+            android:icon="@drawable/ic_play_arrow_red_500_48dp"
+            android:title="@string/pref_sort_Upcoming"
+            android:id="@+id/drawer_upcoming"/>
+        <item
+            android:icon="@drawable/ic_play_arrow_red_500_48dp"
+            android:title="@string/pref_sort_Now_playing"
+            android:id="@+id/drawer_nowPlaying"/>
+        <item
+            android:icon="@drawable/ic_play_arrow_red_500_48dp"
+            android:title="@string/pref_sort_Favorite"
+            android:id="@+id/drawer_favorite"/>
+        </group>
+
+</menu>

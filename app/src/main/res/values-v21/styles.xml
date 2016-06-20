@@ -1,0 +1,16 @@
+<resources>
+
+
+    <style name="DetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/title_color</item>
+        <item name="colorPrimaryDark">@color/title_color</item>
+        <item name="android:windowBackground">@color/menu_text</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+
+
+
+</resources>
