@@ -67,54 +67,35 @@ public class MoviedbFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-       // View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
         View rootView =  inflater.inflate(R.layout.main_fragment, container, false);
-            Log.v("Inside","MovieDBFragment");
-           // mImageAdapter = new ImageAdapter(getActivity(), R.layout.grid_view_movie);
         mImageAdapter = new ImageAdapter(getActivity(), R.layout.staggered_imageview);
         StaggeredGridView gridView = (StaggeredGridView) rootView.findViewById(R.id.grid_view_movie);
-      //  GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
-     //   gridView.setColumnCountLandscape(2);
-       // gridView.setColumnCountPortrait(2);
-       // gridView.setColumnCount(2);
 
+        memptyView = (TextView) rootView.findViewById(R.id.listview_emptyView);
+        gridView.setAdapter(mImageAdapter);
+        gridView.setEmptyView(memptyView);
+        //On click open detail Activity layout
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        
-            memptyView = (TextView) rootView.findViewById(R.id.listview_emptyView);
-            gridView.setAdapter(mImageAdapter);
-            gridView.setEmptyView(memptyView);
-            //On click open detail Activity layout
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selection = Utility.getSelectionValue(getActivity());
+                aPosition = position;
 
-                    String selection = Utility.getSelectionValue(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class);
-                    String value = (String) parent.getItemAtPosition(position);
-                    int k = 0;
-                    aPosition = position;
-
-                    //Decide from which array the value should be retrieved
-                    //If the spinner value is favorite,retrieve the value from database
-                    if (selection.equals(getString(R.string.pref_sort_favorite))) {
-                        intent.putExtra(DetailFragment.EXTRATEXT, "null");
-                        intent.putExtra(DetailFragment.POSITION, position);
-                        mListener.onClickListen(position, isFirst,null);
-                    }
-                    //else retrive the value from JSON
-                    else {
-                     /*   if (position >= resultArray[0].length()) {
-                            position = position % resultArray[0].length();
-                            k++;
-                        }*/
-                        intent.putExtra(DetailFragment.EXTRATEXT, resultArray[k].toString());
-                        intent.putExtra(DetailFragment.POSITION, position);
-                        mListener.onClickListen(position, isFirst,resultArray);
-                    }
-
+                //Decide from which array the value should be retrieved
+                //If the spinner value is favorite,retrieve the value from database
+                if (selection.equals(getString(R.string.pref_sort_favorite))) {
+                    mListener.onClickListen(position, isFirst,null);
                 }
-            });
+                //else send the json value
+                else {
+                    mListener.onClickListen(position, isFirst,resultArray);
+                }
+
+            }
+        });
+        //Call the background task to update the list
         updateMovieList();
 
         return rootView;
@@ -131,7 +112,6 @@ public class MoviedbFragment extends Fragment {
         catch(ClassCastException ex){
             Log.d("Fragment",activity.getLocalClassName()+" does not implement listener class"+OnClickItemListener.class);
         }
-       // updateMovieList();
 
     }
     @Override
@@ -149,8 +129,6 @@ public class MoviedbFragment extends Fragment {
         //Retrieve the preference value from Shared preference value
 
         String selection = Utility.getSelectionValue(getActivity());
-
-
         if(selection.equals(getString(R.string.pref_sort_favorite))){
             displayFavorite(getActivity());
         }
@@ -304,10 +282,13 @@ public class MoviedbFragment extends Fragment {
                 }
             }
             else{
+                //Display empty text view when there is no data
                 mImageAdapter.clear();
                 TextView emptyView = (TextView) getView().findViewById(R.id.listview_emptyView);
                 emptyView.setText("No Internet Connection");
             }
+
+            //Display the first record in detail view in two pane layout
             if (resultArray[0]!=null && isFirst == true){
                 mListener.onClickListen( 0, true,resultArray);
              }

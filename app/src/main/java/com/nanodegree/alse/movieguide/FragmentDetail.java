@@ -52,13 +52,16 @@ public class FragmentDetail extends Fragment {
     ViewPagerAdapter mpagerAdapter;
     public static final String EXTRATEXT = "EXTRA_TEXT";
     public static final String POSITION = "EXTRA_POSITION";
+    static final String SHARE_TAG = "#MovieGuideApp";
     public static final String FLAG = "EXTRA_FLAG";
     public static Movie movie=new Movie();
     boolean pressed = false;
     boolean dataChanged = false;
     FloatingActionButton FAB;
+    FloatingActionButton FABShare;
     OnChangeListener mListener;
     private final String IMAGE_BASEURL = "http://image.tmdb.org/t/p/w185/";
+    boolean share = false;
 
 
     public FragmentDetail() {
@@ -96,16 +99,13 @@ public class FragmentDetail extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        View rootView =  inflater.inflate(R.layout.fragment_detail2, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_detail, container, false);
         Bundle bundle = getArguments();
 
+        //Do not set the toolbar for two pane layout
         if(bundle!=null&&!bundle.getBoolean(FLAG)) {
-            //    toolbar = (Toolbar)rootView.findViewById(R.id.tool_bar).findViewById(R.id.toolbar_actionbar);
             Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar_actionbar);
-
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -147,11 +147,8 @@ public class FragmentDetail extends Fragment {
         });
         getjsonObject();
         String imageURL = null;
-       // ImageView toolImage = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
-     //   ImageView toolImage = (ImageView)rootView.findViewById(R.id.tool_bar).findViewById(R.id.imageViewplaces);
         ImageView toolImage = (ImageView)rootView.findViewById(R.id.imageViewplaces);
         String selection = Utility.getSelectionValue(getActivity());
-        Log.v("DetailFragment", selection);
         String noPosterUrl = "https://assets.tmdb.org/assets/f996aa2014d2ffddfda8463c479898a3/images/no-poster-w185.jpg";
         if (selection.equals(getString(R.string.pref_sort_favorite))) {
             if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
@@ -169,7 +166,6 @@ public class FragmentDetail extends Fragment {
         if (movie.movieId == -1) {
             return null;
         }
-       // ImageView poster = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
         //When clicked on the image trailer should get launched
         toolImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +173,22 @@ public class FragmentDetail extends Fragment {
                 onClickVideo(v);
             }
         });
+        FABShare = (FloatingActionButton) rootView.findViewById(R.id.share);
+        FABShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                sharevideoUrl();
+            }
+        });
 
         return rootView;
+    }
+    public void sharevideoUrl(){
+        share= true;
+        onClickVideo(null);
+
+
     }
 
     @Override
@@ -282,7 +292,6 @@ public class FragmentDetail extends Fragment {
     public void processJSON(JSONObject object){
         try {
             movie.movieId = object.getInt("id");
-            Log.v("process","hyu"+movie.movieId);
             boolean isPresent = IsPresentInFavorites(object.getInt("id"));
             if(isPresent == true){
                 FAB.setImageResource(R.drawable.ic_favorite_red_500_48dp);
@@ -312,7 +321,6 @@ public class FragmentDetail extends Fragment {
         if(bundle!=null) {
             String value = bundle.getString(EXTRATEXT);
             int position = bundle.getInt(POSITION);
-            Log.v("DetailFrgamentPosition",String.valueOf(position));
             if (Utility.getSelectionValue(getActivity()).equals(getString(R.string.pref_favorite_key))) {
                 getFavorite(position);
                 FAB.setImageResource(R.drawable.ic_favorite_red_500_48dp);
@@ -350,7 +358,7 @@ public class FragmentDetail extends Fragment {
     }
 
     public void onClickVideo(View v){
-        int movieId = movieId = movie.movieId;
+        int movieId = movie.movieId;
         FetchTrailer fetchTrailer = new FetchTrailer();
         fetchTrailer.execute(movieId);
     }
@@ -360,6 +368,7 @@ public class FragmentDetail extends Fragment {
         final String BASE_URI = "http://api.themoviedb.org/3/movie/";
         final String PARAM_APIKEY = "api_key";
         final String LOG_TAG = FetchTrailer.class.getSimpleName();
+
 
         @Override
         protected ArrayList<String> doInBackground(Integer... params) {
@@ -409,13 +418,31 @@ public class FragmentDetail extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
+            Uri uri=null;
             for(String videoId:strings){
                 String url = "http://img.youtube.com/vi/"+videoId+"/0.jpg";
+                uri = Uri.parse("https://www.youtube.com/watch").buildUpon().appendQueryParameter("v",videoId).build();
+                break;
+            }
+            if(uri == null || !Utility.isOnline(getActivity())){
+                String text = "No Internet Connection";
+                Toast t = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+                t.show();
+                return;
+            }
+            if(!share){
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.parse("https://www.youtube.com/watch").buildUpon().appendQueryParameter("v",videoId).build();
                 intent.setData(uri);
                 startActivity(Intent.createChooser(intent,"Play trailer in"));
-                break;
+            }
+            else{
+
+                share = false;
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Video Trailer of movie " + movie.title + "-  " + uri+ " "+SHARE_TAG);
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+
             }
         }
     }
@@ -431,7 +458,6 @@ public class FragmentDetail extends Fragment {
                     trailers.add(videoId);
                     break;
                 }
-
             }
         }
         catch (JSONException e) {

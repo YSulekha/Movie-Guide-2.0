@@ -49,29 +49,26 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.secondtab, container, false);
-
-
-            data.add("review1");
-            data.add("review2");
+        data.add("review1");
+        data.add("review2");
 
         final ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),R.layout.list_item,R.id.review,data);
         mReviewAdapter = reviewAdapter;
 
         listView = (ListView) rootView.findViewById(R.id.list_view_review);
-            textView = (TextView) rootView.findViewById(R.id.review_emptyView);
-            listView.setEmptyView(textView);
-            listView.setAdapter(mReviewAdapter);
-          //  Log.v("TabFragment", mReviewAdapter.toString());
-            try {
+        textView = (TextView) rootView.findViewById(R.id.review_emptyView);
+        listView.setEmptyView(textView);
+        listView.setAdapter(mReviewAdapter);
 
-                int movieId = FragmentDetail.movie.movieId;
-                Log.v("TabFragment", String.valueOf(movieId));
-                mfetchReview = new FetchReview();
-                mfetchReview.execute(movieId);
+        try {
 
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error while fetching the value from jsonStr" + e.getMessage());
-            }
+            int movieId = FragmentDetail.movie.movieId;
+            mfetchReview = new FetchReview();
+            mfetchReview.execute(movieId);
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Error while fetching the value from jsonStr" + e.getMessage());
+        }
 
         return rootView;
 
@@ -141,14 +138,11 @@ public class TabFragment extends Fragment {
             if (jsonStr != null) {
                 mReviewAdapter.clear();
                 for (int i = 0; i < jsonStr.size(); i++) {
-                 //   Log.v("TabFragment23", mReviewAdapter.toString());
                     mReviewAdapter.add(jsonStr.get(i));
                 }
-               // Log.v("Tab", String.valueOf(listView.getCount()));
             }
             else{
                 mReviewAdapter.clear();
-             //   TextView textView = (TextView)getView().findViewById(R.id.review_emptyView);
                 textView.setText("No Reviews");
             }
         }

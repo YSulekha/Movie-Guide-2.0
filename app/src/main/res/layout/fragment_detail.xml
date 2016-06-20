@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/tool_bar"
-        layout="@layout/tool_bar1"
+        layout="@layout/tool_bar_detail"
         />
 
 
@@ -39,12 +39,22 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_favorite_border_red_500_48dp"
         android:clickable="true"
-        android:layout_marginRight="38dp"
-        android:layout_marginEnd="38dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="35dp" />
+        android:layout_marginTop="25dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_share_red_500_48dp"
+        android:clickable="true"
+        android:layout_alignTop="@+id/fab"
+        android:layout_toLeftOf="@+id/fab"
+        android:layout_marginRight="8dp" />
 
 </RelativeLayout>
 

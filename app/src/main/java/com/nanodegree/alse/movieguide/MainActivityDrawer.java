@@ -1,6 +1,5 @@
 package com.nanodegree.alse.movieguide;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -18,9 +17,7 @@ import org.json.JSONArray;
 
 import java.util.Arrays;
 
-/**
- * Created by aharyadi on 6/16/16.
- */
+
 public class MainActivityDrawer extends AppCompatActivity implements MoviedbFragment.OnClickItemListener,
         FragmentDetail.OnChangeListener{
 
@@ -32,22 +29,19 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
     boolean mTwoPane;
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private static final String MOVIEFRAGMENT_TAG = "MFTAG";
-    Context mContext;
     int currPosition = -1;
     int savedDetailposition = -1;
     boolean saved = false;
-    private String[] mSelectionTitles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_drawer);
 
-
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         mDrawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-
         mDrawToggle = setupDrawerToggle();
         mDrawer.setDrawerListener(mDrawToggle);
         mNavView = (NavigationView)findViewById(R.id.drawer_navig);
@@ -56,44 +50,42 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
         if (savedInstanceState == null) {
             MoviedbFragment moviedbFragment = new MoviedbFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_container, moviedbFragment, MOVIEFRAGMENT_TAG).commit();
+            //Check if internet connection is present
             if(!Utility.isOnline(this)){
+                //If there is no internet,then show favorites
                 mNavView.getMenu().getItem(4).setChecked(true);
                 selectDrawerItem(mNavView.getMenu().getItem(4));
             }
             else {
+                //else show popular movies
                 mNavView.getMenu().getItem(0).setChecked(true);
                 selectDrawerItem(mNavView.getMenu().getItem(0));
 
             }
-           // updateList();
         }
         else{
+            //Handle Orientation Change
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             SavedSpinnerPosition = sharedPref.getInt("Position", 0);
             selectDrawerItem(mNavView.getMenu().getItem(SavedSpinnerPosition));
             savedDetailposition = savedInstanceState.getInt("detailPosition");
-            Log.v("saved Position",String.valueOf(savedDetailposition));
             saved = true;
-           // updateList();
         }
+        //Check to see whether it is a single pane or two pane layout
         if (findViewById(R.id.fragment_container) != null) {
             mTwoPane = true;
             if(savedInstanceState==null) {
-                Log.v("MainActivity","Saved+null");
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentDetail(), DETAILFRAGMENT_TAG).commit();
             }
         }
         else
             mTwoPane = false;
 
-
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.v("OnSaveInstance", "Main");
         //Save the detail fragment position for Orientation change
         outState.putInt("detailPosition", currPosition);
     }
@@ -118,7 +110,6 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
     public void selectDrawerItem(MenuItem item){
         int position = Arrays.asList(getResources().getStringArray(R.array.pref_sort_entries)).indexOf(item.getTitle());
         String selection = getResources().getStringArray(R.array.pref_sort_entryValues)[position];
-        Log.v("selectItem", selection + position);
 
 
         //Store the preference to file to access it fragment
@@ -129,7 +120,6 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
         //Store the position to access it in OnSaveInstance - handling Orientation change
         editor.putInt("Position", position);
         editor.commit();
-        Log.v("MainActivity","OnItemSelected");
 
         //Update the grid view when the user selects different option in spinner
 
@@ -154,12 +144,6 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
         if(mDrawToggle.onOptionsItemSelected(item)){
             return true;
         }
-
-        /*switch (item.getItemId()){
-            case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
-                return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -174,6 +158,8 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
         String jsonStr;
         int acPosition = position;
         int k=0;
+
+        //If it is two pane then after orientation change retrieve the saved position
         if(mTwoPane){
             if(saved) {
                 position = savedDetailposition;
@@ -184,7 +170,6 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
         }
         if (selection.equals(getString(R.string.pref_sort_favorite))) {
             jsonStr = null;
-            //acPosition = position;
         }
         //else retrive the value from JSON
         else {
@@ -196,15 +181,10 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
            // acPosition= position;
 
         }
+        //If two pane send the bundle
         if(mTwoPane){
             Bundle b = new Bundle();
-            b.putString(DetailFragment.EXTRATEXT, jsonStr);
-         /*   if(saved) {
-                position=savedDetailposition;
-                Log.v("MainActivity12",String.valueOf(position));
-
-            }*/
-           //   else {
+            b.putString(FragmentDetail.EXTRATEXT, jsonStr);
             b.putInt(FragmentDetail.POSITION, position);
             b.putBoolean(FragmentDetail.FLAG, true);
             //Save the current position of detail fragment for Orientation change
@@ -212,9 +192,9 @@ public class MainActivityDrawer extends AppCompatActivity implements MoviedbFrag
             FragmentDetail fragment = new FragmentDetail();
             fragment.setArguments(b);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, DETAILFRAGMENT_TAG).commit();
-             //  }
 
         }
+        //else intent to detail activity
         else if(!isFirst){
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(FragmentDetail.EXTRATEXT, jsonStr);
