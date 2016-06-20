@@ -16,7 +16,7 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_play_circle_outline_red_500_18dp"
+        android:src="@drawable/ic_play_circle_filled_red_500_24dp"
         android:layout_centerInParent="true" />
 
 

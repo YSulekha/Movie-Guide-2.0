@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.json.JSONArray;
+
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         MoviedbFragment.OnClickItemListener,DetailFragment.OnChangeListener{
@@ -161,33 +163,53 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //Listener which is invoked when the user clicks on grid view item
     @Override
-    public void onClickListen(String jsonStr, int position,boolean isFirst) {
+    public void onClickListen(int position,boolean isFirst,JSONArray[] resultArray) {
+        String selection = Utility.getSelectionValue(this);
+        String jsonStr;
+        int acPosition;
+        int k=0;
+        if(saved) {
+            position=savedDetailposition;
+            Log.v("MainActivity12",String.valueOf(position));
+            saved=false;
+        }
+        if (selection.equals(getString(R.string.pref_sort_favorite))) {
+            jsonStr = null;
+            acPosition = position;
+        }
+        //else retrive the value from JSON
+        else {
+                        if (position >= resultArray[0].length()) {
+                            position = position % resultArray[0].length();
+                            k++;
+                        }
+            jsonStr = resultArray[k].toString();
+            acPosition= position;
+
+        }
         if(mTwoPane){
             Bundle b = new Bundle();
             b.putString(DetailFragment.EXTRATEXT, jsonStr);
-            if(saved) {
-                position=savedDetailposition;
-                Log.v("MainActivity12",String.valueOf(position));
-                saved=false;
-            }
-            else {
-                b.putInt(DetailFragment.POSITION, position);
+
+          //  else {
+                b.putInt(DetailFragment.POSITION, acPosition);
                 //Save the current position of detail fragment for Orientation change
                 currPosition = position;
                 DetailFragment fragment = new DetailFragment();
                 fragment.setArguments(b);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, DETAILFRAGMENT_TAG).commit();
-            }
+         //   }
 
         }
         else if(!isFirst){
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailFragment.EXTRATEXT, jsonStr);
-            intent.putExtra(DetailFragment.POSITION, position);
+            intent.putExtra(DetailFragment.POSITION, acPosition);
             startActivityForResult(intent, 0);
 
         }
     }
+
     //This callback is for displaying updated favorite result
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

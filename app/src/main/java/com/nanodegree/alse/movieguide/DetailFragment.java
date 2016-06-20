@@ -50,8 +50,10 @@ public class DetailFragment extends Fragment {
     ViewPagerAdapter mpagerAdapter;
     public static final String EXTRATEXT = "EXTRA_TEXT";
     public static final String POSITION = "EXTRA_POSITION";
+
     public static Movie movie=new Movie();
     boolean pressed = false;
+    public boolean mTwoPane = false;
     boolean dataChanged = false;
     FloatingActionButton FAB;
     OnChangeListener mListener;
@@ -61,7 +63,7 @@ public class DetailFragment extends Fragment {
         // Required empty public constructor
     }
 
- /*   @Override
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -69,7 +71,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }*/
+    }
 
     //Interface for notifying the changes in favorite list to implementing activity
     public interface OnChangeListener{
@@ -79,6 +81,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try{
             mListener = (OnChangeListener)activity;
         }
@@ -92,71 +95,71 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView =  inflater.inflate(R.layout.detail_fragment, container, false);
+            TabLayout t = (TabLayout) rootView.findViewById(R.id.tabs);
+            t.addTab(t.newTab().setText("Detail"), 0);
+            t.addTab(t.newTab().setText("Review"), 1);
+            t.setTabTextColors(ContextCompat.getColorStateList(getActivity(), R.color.title_color));
+            t.setTabGravity(t.GRAVITY_FILL);
 
-        TabLayout t = (TabLayout) rootView.findViewById(R.id.tabs);
-        t.addTab(t.newTab().setText("Detail"), 0);
-        t.addTab(t.newTab().setText("Review"), 1);
-        t.setTabTextColors(ContextCompat.getColorStateList(getActivity(), R.color.title_color));
-        t.setTabGravity(t.GRAVITY_FILL);
+            final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+            mpagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+            viewPager.setAdapter(mpagerAdapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(t));
+            t.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
 
-        final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
-        mpagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        viewPager.setAdapter(mpagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(t));
-        t.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                }
 
-            }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                }
+            });
 
-            }
-        });
-
-        FAB = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        FAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addToFavorite();
-            }
-        });
-        getjsonObject();
-        String imageURL = null;
-        ImageView toolImage = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
-        String selection = Utility.getSelectionValue(getActivity());
-        Log.v("DetailFragment",selection);
-        String noPosterUrl = "https://assets.tmdb.org/assets/f996aa2014d2ffddfda8463c479898a3/images/no-poster-w185.jpg";
-        if (selection.equals(getString(R.string.pref_sort_favorite))) {
-            if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
-                File file = new File(movie.posterUrl);
-                Picasso.with(getActivity()).load(file).
+            FAB = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            FAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToFavorite();
+                }
+            });
+            getjsonObject();
+            String imageURL = null;
+            ImageView toolImage = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
+            String selection = Utility.getSelectionValue(getActivity());
+            Log.v("DetailFragment", selection);
+            String noPosterUrl = "https://assets.tmdb.org/assets/f996aa2014d2ffddfda8463c479898a3/images/no-poster-w185.jpg";
+            if (selection.equals(getString(R.string.pref_sort_favorite))) {
+                if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
+                    File file = new File(movie.posterUrl);
+                    Picasso.with(getActivity()).load(file).
+                            into(toolImage);
+                }
+            } else if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
+                imageURL = IMAGE_BASEURL + movie.posterUrl;
+                Picasso.with(getActivity()).load(imageURL).
                         into(toolImage);
+            } else {
+                Picasso.with(getActivity()).load(noPosterUrl).into(toolImage);
             }
-        } else if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
-            imageURL = IMAGE_BASEURL + movie.posterUrl;
-            Picasso.with(getActivity()).load(imageURL).
-                    into(toolImage);
-        } else {
-            Picasso.with(getActivity()).load(noPosterUrl).into(toolImage);
-        }
-        if(movie.movieId==-1){
-            return null;
-        }
-        ImageView poster = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
-        //When clicked on the image trailer should get launched
-        poster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickVideo(v);
+            if (movie.movieId == -1) {
+                return null;
             }
-        });
+            ImageView poster = (ImageView) rootView.findViewById(R.id.image_src).findViewById(R.id.imageViewplaces);
+            //When clicked on the image trailer should get launched
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickVideo(v);
+                }
+            });
+
         return rootView;
     }
 
@@ -176,8 +179,10 @@ public class DetailFragment extends Fragment {
             String selectionArgs[] = new String[]{String.valueOf(movie.movieId)};
             int rowsDeleted = getActivity().getContentResolver().delete(uri, where, selectionArgs);
             text = getString(R.string.removed_favorite);
-            if(mListener!=null) {
-                mListener.onChangeListen();
+            if(Utility.getSelectionValue(getActivity()).equals(getResources().getString(R.string.pref_sort_favorite))) {
+                if (mListener != null) {
+                    mListener.onChangeListen();
+                }
             }
             Intent data = new Intent();
             dataChanged = true;
@@ -203,6 +208,11 @@ public class DetailFragment extends Fragment {
             Uri returnUri = getActivity().getContentResolver().insert(uri, values);
             FAB.setImageResource(R.drawable.ic_favorite_red_500_48dp);
             pressed=true;
+            if(Utility.getSelectionValue(getActivity()).equals(getResources().getString(R.string.pref_sort_favorite))) {
+                if (mListener != null) {
+                    mListener.onChangeListen();
+                }
+            }
         }
         Toast t = Toast.makeText(getActivity(), text, Toast.LENGTH_LONG);
         t.show();

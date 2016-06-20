@@ -11,9 +11,10 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivityDrawer"
             android:label="@string/title"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            >
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,11 +22,12 @@
         </activity>
         <activity
             android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".MainActivityDrawer"
+            android:label=""
             android:theme="@style/DetailTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nanodegree.alse.movieguide.MainActivity" />
+                android:value="com.nanodegree.alse.movieguide.MainActivityDrawer" />
         </activity>
         <provider
             android:authorities="com.nanodegree.alse.movieguide.data"

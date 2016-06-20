@@ -6,8 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -33,9 +38,12 @@ public class DetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_detail1, container, false);
+      //  View root = inflater.inflate(R.layout.fragment_detail1, container, false);
+        View root = inflater.inflate(R.layout.detail_card, container, false);
    //  if(savedInstanceState==null) {
-            movie = DetailFragment.movie;
+          //  movie = DetailFragment.movie;
+             movie = FragmentDetail.movie;
+         //  Log.v("DetailActivityFreagment",String.valueOf(movie.movieId));
             if (movie.movieId == -1) {
                 return null;
             }
@@ -61,12 +69,36 @@ public class DetailActivityFragment extends Fragment {
             } else {
                 Picasso.with(getActivity()).load(noPosterUrl).into(toolImage);
             }*/
+        ImageView imageView = (ImageView)root.findViewById(R.id.detail_poster);
+        String selection = Utility.getSelectionValue(getActivity());
+        if (selection.equals(getString(R.string.pref_sort_favorite))) {
+            Log.v("InsideDetail",selection);
+            if (movie.posterUrl != null && !movie.posterUrl.equals("null")) {
+                Log.v("InsideDetail2",selection);
+                File file = new File(movie.posterUrl);
+                Picasso.with(getActivity()).load(file).
+                        into(imageView);
+            }
+        }
+        else if (movie.posterUrl != null && !movie.posterUrl.equals("null")){
+            imageURL = IMAGE_BASEURL + movie.posterUrl;
+            Picasso.with(getActivity()).load(imageURL).
+                    into(imageView);
+        }
+        else {
+            Picasso.with(getActivity()).load(noPosterUrl).into(imageView);
+        }
+
             TextView desc = (TextView) root.findViewById(R.id.detail_overview);
             desc.setText(movie.overview);
 
+
+            TextView titleText = (TextView) root.findViewById(R.id.detail_title);
+            titleText.setText(movie.title);
+
             TextView release = (TextView) root.findViewById(R.id.detail_release_date);
             release.setText(movie.date);
-                Log.v("DetailActivityFragment", release.toString());
+               // Log.v("DetailActivityFragment", "iii"+movie.movieId);
 
             RatingBar rate = (RatingBar) root.findViewById(R.id.detail_ratingBar);
             //change rating in terms of 5

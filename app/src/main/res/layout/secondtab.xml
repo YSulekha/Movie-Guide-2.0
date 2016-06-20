@@ -2,15 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:layout_marginLeft="18dp"
+    android:layout_marginRight="18dp"
+
     >
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_review"
-        android:divider="@null"
-        >
+        android:dividerHeight="8dp"
+        android:divider="@android:color/transparent"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp">
     </ListView>
 
     <TextView
@@ -18,9 +22,11 @@
         android:layout_height="match_parent"
         android:id="@+id/review_emptyView"
         android:text="No Review"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:textColor="@color/title_color"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"/>
+        android:layout_marginTop="20dp"
+        android:textSize="19sp"
+        android:textStyle="bold"
+       />
 
 </FrameLayout>

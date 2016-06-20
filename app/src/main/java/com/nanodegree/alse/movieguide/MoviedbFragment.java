@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.nanodegree.alse.movieguide.data.MovieContract;
 
 import org.json.JSONArray;
@@ -40,11 +40,17 @@ public class MoviedbFragment extends Fragment {
     OnClickItemListener mListener;
     boolean isFirst = false;
     String prevSelection;
+    int aPosition;
+    TextView memptyView;
 
     JSONArray [] resultArray = new JSONArray[2]; //Array to store the result of two pages retrieved from MovieDb API
     final String LOGTAG = MoviedbFragment.class.getSimpleName();
 
     public MoviedbFragment() {
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -53,7 +59,7 @@ public class MoviedbFragment extends Fragment {
 
     }
     public interface OnClickItemListener{
-        public void onClickListen(String jsonStr,int Position,boolean isFirst);
+        public void onClickListen(int Position,boolean isFirst,JSONArray [] resultArray);
 
     }
 
@@ -61,13 +67,22 @@ public class MoviedbFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
+       // View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView =  inflater.inflate(R.layout.main_fragment, container, false);
             Log.v("Inside","MovieDBFragment");
-            mImageAdapter = new ImageAdapter(getActivity(), R.layout.grid_view_movie);
-            GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
-            TextView emptyView = (TextView) rootView.findViewById(R.id.listview_emptyView);
+           // mImageAdapter = new ImageAdapter(getActivity(), R.layout.grid_view_movie);
+        mImageAdapter = new ImageAdapter(getActivity(), R.layout.staggered_imageview);
+        StaggeredGridView gridView = (StaggeredGridView) rootView.findViewById(R.id.grid_view_movie);
+      //  GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_movie);
+     //   gridView.setColumnCountLandscape(2);
+       // gridView.setColumnCountPortrait(2);
+       // gridView.setColumnCount(2);
+
+
+        
+            memptyView = (TextView) rootView.findViewById(R.id.listview_emptyView);
             gridView.setAdapter(mImageAdapter);
-            gridView.setEmptyView(emptyView);
+            gridView.setEmptyView(memptyView);
             //On click open detail Activity layout
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -78,27 +93,29 @@ public class MoviedbFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), DetailActivity.class);
                     String value = (String) parent.getItemAtPosition(position);
                     int k = 0;
+                    aPosition = position;
 
                     //Decide from which array the value should be retrieved
                     //If the spinner value is favorite,retrieve the value from database
                     if (selection.equals(getString(R.string.pref_sort_favorite))) {
                         intent.putExtra(DetailFragment.EXTRATEXT, "null");
                         intent.putExtra(DetailFragment.POSITION, position);
-                        mListener.onClickListen("null", position, isFirst);
+                        mListener.onClickListen(position, isFirst,null);
                     }
                     //else retrive the value from JSON
                     else {
-                        if (position >= resultArray[0].length()) {
+                     /*   if (position >= resultArray[0].length()) {
                             position = position % resultArray[0].length();
                             k++;
-                        }
+                        }*/
                         intent.putExtra(DetailFragment.EXTRATEXT, resultArray[k].toString());
                         intent.putExtra(DetailFragment.POSITION, position);
-                        mListener.onClickListen(resultArray[k].toString(), position, isFirst);
+                        mListener.onClickListen(position, isFirst,resultArray);
                     }
 
                 }
             });
+        updateMovieList();
 
         return rootView;
     }
@@ -106,6 +123,7 @@ public class MoviedbFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.v("OnAttach","Fragment");
         try{
             //Lisener to know when the Grid view item is clicked in two pane layout
             mListener = (OnClickItemListener)activity;
@@ -113,6 +131,7 @@ public class MoviedbFragment extends Fragment {
         catch(ClassCastException ex){
             Log.d("Fragment",activity.getLocalClassName()+" does not implement listener class"+OnClickItemListener.class);
         }
+       // updateMovieList();
 
     }
     @Override
@@ -128,7 +147,9 @@ public class MoviedbFragment extends Fragment {
     //Function to call the background task
     public void updateMovieList(){
         //Retrieve the preference value from Shared preference value
+
         String selection = Utility.getSelectionValue(getActivity());
+
 
         if(selection.equals(getString(R.string.pref_sort_favorite))){
             displayFavorite(getActivity());
@@ -157,8 +178,11 @@ public class MoviedbFragment extends Fragment {
         mImageAdapter.clear();
         if(cursor.getCount()==0){
             //When there is no data in db,display the empty view
-            TextView emptyView = (TextView) getView().findViewById(R.id.listview_emptyView);
-            emptyView.setText(getString(R.string.empty_no_favorites));
+            View view = getView();
+            if(memptyView!=null) {
+                //TextView emptyView = (TextView) view.findViewById(R.id.listview_emptyView);
+                memptyView.setText(getString(R.string.empty_no_favorites));
+            }
         }
         while(cursor.moveToNext()){
             String posterUrl = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMG_SRC));
@@ -170,7 +194,7 @@ public class MoviedbFragment extends Fragment {
         //so that old detail view is replaced with new movie detail from favorites
         String selection = Utility.getSelectionValue(getActivity());
         if(!selection.equals(prevSelection)) {
-            mListener.onClickListen(null, 0, true);
+            mListener.onClickListen(0, true,null);
         }
     }
 
@@ -285,7 +309,7 @@ public class MoviedbFragment extends Fragment {
                 emptyView.setText("No Internet Connection");
             }
             if (resultArray[0]!=null && isFirst == true){
-                mListener.onClickListen(resultArray[0].toString(), 0, true);
+                mListener.onClickListen( 0, true,resultArray);
              }
             isFirst = false;
         }

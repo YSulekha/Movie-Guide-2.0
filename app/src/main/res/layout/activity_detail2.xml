@@ -1,9 +1,3 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbarAlwaysDrawVerticalTrack="true">
 
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,8 +6,15 @@ android:id="@+id/fragment_container"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.nanodegree.alse.movieguide.DetailActivity"
-tools:ignore="MergeRootFrame" />
-    </ScrollView>
+tools:ignore="MergeRootFrame">
+
+
+
+</FrameLayout>
+
+
+
+
 
 
 

@@ -6,15 +6,20 @@
     <string name="pref_sort_upcoming">upcoming</string>
     <string name="pref_sort_now_playing">now_playing</string>
     <string name="pref_sort_favorite">favorite</string>
+    <string name="pref_sort_Popular">Popular</string>
+    <string name="pref_sort_Top_rated">Top Rated</string>
+    <string name="pref_sort_Upcoming">Upcoming</string>
+    <string name="pref_sort_Now_playing">Playing</string>
+    <string name="pref_sort_Favorite">Favorites</string>
     <string name="pref_sort_key">Sortorder</string>
     <string name="pref_sort_title">Sort Order</string>
     <string name="pref_sort_default">@string/pref_sort_popular</string>
     <string-array name="pref_sort_entries">
-        <item>Popular</item>
-        <item>Top Rated</item>
-        <item>Upcoming</item>
-        <item>Playing</item>
-        <item>Favorite</item>
+        <item>@string/pref_sort_Popular</item>
+        <item>@string/pref_sort_Top_rated</item>
+        <item>@string/pref_sort_Upcoming</item>
+        <item>@string/pref_sort_Now_playing</item>
+        <item>@string/pref_sort_Favorite</item>
     </string-array>
     <string-array name="pref_sort_entryValues">
         <item>@string/pref_sort_popular</item>
@@ -31,4 +36,6 @@
     <string name="empty_no_favorites">No Favorites in your list</string>
     <string name="favorite_added">Added to favorite</string>
     <string name="removed_favorite">Removed from favorite</string>
+    <string name="drawer_open">Open Navigation drawer</string>
+    <string name="drawer_close">Close Navigation drawer</string>
 </resources>

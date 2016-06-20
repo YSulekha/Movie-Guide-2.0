@@ -6,25 +6,35 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
+      //          getWindow().setStatusBarColor(Color.TRANSPARENT);
+     getWindow().getDecorView().setSystemUiVisibility(
+             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail2);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
+
 
         if(savedInstanceState==null) {
             Bundle bundle = new Bundle();
             Intent intent = getIntent();
-            bundle.putString(DetailFragment.EXTRATEXT, intent.getStringExtra(DetailFragment.EXTRATEXT));
-            bundle.putInt(DetailFragment.POSITION, intent.getIntExtra(DetailFragment.POSITION, 0));
+            bundle.putString(FragmentDetail.EXTRATEXT, intent.getStringExtra(FragmentDetail.EXTRATEXT));
+            bundle.putInt(FragmentDetail.POSITION, intent.getIntExtra(FragmentDetail.POSITION, 0));
             Log.v("DetailActivity",intent.toString());
-            DetailFragment fragment = new DetailFragment();
+            FragmentDetail fragment = new FragmentDetail();
+
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, fragment, DETAILFRAGMENT_TAG)

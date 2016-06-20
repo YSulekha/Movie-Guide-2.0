@@ -31,11 +31,14 @@ public class TabFragment extends Fragment {
     public static final String POSITION = "EXTRA_POSITION";
     final String LOG_TAG = TabFragment.class.getSimpleName();
     ArrayAdapter<String> mReviewAdapter;
+    FetchReview mfetchReview;
+    ListView listView;
+    ArrayList<String> data = new ArrayList<String>();
+    TextView textView;
 
-   @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -46,25 +49,30 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.secondtab, container, false);
-       // if(savedInstanceState==null) {
-            ArrayList<String> data = new ArrayList<String>();
-            mReviewAdapter = new ArrayAdapter<String>(getContext(), R.layout.list_item, R.id.review);
-            ListView listView = (ListView) rootView.findViewById(R.id.list_view_review);
-            TextView textView = (TextView) rootView.findViewById(R.id.review_emptyView);
+
+
+            data.add("review1");
+            data.add("review2");
+
+        final ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),R.layout.list_item,R.id.review,data);
+        mReviewAdapter = reviewAdapter;
+
+        listView = (ListView) rootView.findViewById(R.id.list_view_review);
+            textView = (TextView) rootView.findViewById(R.id.review_emptyView);
             listView.setEmptyView(textView);
             listView.setAdapter(mReviewAdapter);
-            Log.v("TabFragment", mReviewAdapter.toString());
+          //  Log.v("TabFragment", mReviewAdapter.toString());
             try {
 
-                int movieId = DetailFragment.movie.movieId;
+                int movieId = FragmentDetail.movie.movieId;
                 Log.v("TabFragment", String.valueOf(movieId));
-                FetchReview fetchReview = new FetchReview();
-                fetchReview.execute(movieId);
+                mfetchReview = new FetchReview();
+                mfetchReview.execute(movieId);
 
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Error while fetching the value from jsonStr" + e.getMessage());
             }
-       // }
+
         return rootView;
 
     }
@@ -106,6 +114,7 @@ public class TabFragment extends Fragment {
                 if (buffer.length() == 0)
                     return null;
                 jsonStr = buffer.toString();
+                return formatJSONStr(jsonStr);
 
             }
             catch (MalformedURLException e) {
@@ -124,23 +133,22 @@ public class TabFragment extends Fragment {
                         Log.d(LOG_TAG, "Error closing reader" + e.getMessage());
                     }
             }
-            return formatJSONStr(jsonStr);
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> strings) {
-
-            if(strings !=null) {
+        protected void onPostExecute(ArrayList<String> jsonStr) {
+            if (jsonStr != null) {
                 mReviewAdapter.clear();
-
-                for (String review : strings) {
-                    Log.v("InsidePostExecute", review);
-                    Log.v("TabFragment", mReviewAdapter.toString());
-                    mReviewAdapter.add(review);
+                for (int i = 0; i < jsonStr.size(); i++) {
+                 //   Log.v("TabFragment23", mReviewAdapter.toString());
+                    mReviewAdapter.add(jsonStr.get(i));
                 }
+               // Log.v("Tab", String.valueOf(listView.getCount()));
             }
             else{
-                TextView textView = (TextView)getView().findViewById(R.id.review_emptyView);
+                mReviewAdapter.clear();
+             //   TextView textView = (TextView)getView().findViewById(R.id.review_emptyView);
                 textView.setText("No Reviews");
             }
         }
